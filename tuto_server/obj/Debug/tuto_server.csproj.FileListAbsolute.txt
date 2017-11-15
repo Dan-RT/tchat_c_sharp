@@ -1,0 +1,10 @@
+\\psf\Google Drive\M1\Semestre 7\C#\Projet\Projet\WindowsFormsApp1\tuto_server\obj\Debug\tuto_server.csprojResolveAssemblyReference.cache
+\\psf\Google Drive\M1\Semestre 7\C#\Projet\Projet\WindowsFormsApp1\tuto_server\obj\Debug\tuto_server.Properties.Resources.resources
+\\psf\Google Drive\M1\Semestre 7\C#\Projet\Projet\WindowsFormsApp1\tuto_server\obj\Debug\tuto_server.csproj.GenerateResource.Cache
+\\psf\Google Drive\M1\Semestre 7\C#\Projet\Projet\WindowsFormsApp1\tuto_server\obj\Debug\tuto_server.csproj.CoreCompileInputs.cache
+\\psf\Google Drive\M1\Semestre 7\C#\Projet\Projet\WindowsFormsApp1\tuto_server\obj\Debug\tuto_server.Server_side.resources
+\\psf\Google Drive\M1\Semestre 7\C#\Projet\Projet\WindowsFormsApp1\tuto_server\bin\Debug\tuto_server.exe.config
+\\psf\Google Drive\M1\Semestre 7\C#\Projet\Projet\WindowsFormsApp1\tuto_server\bin\Debug\tuto_server.exe
+\\psf\Google Drive\M1\Semestre 7\C#\Projet\Projet\WindowsFormsApp1\tuto_server\bin\Debug\tuto_server.pdb
+\\psf\Google Drive\M1\Semestre 7\C#\Projet\Projet\WindowsFormsApp1\tuto_server\obj\Debug\tuto_server.exe
+\\psf\Google Drive\M1\Semestre 7\C#\Projet\Projet\WindowsFormsApp1\tuto_server\obj\Debug\tuto_server.pdb
