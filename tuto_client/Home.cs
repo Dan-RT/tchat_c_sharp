@@ -5,8 +5,11 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
+
 
 namespace tuto_client
 {
@@ -17,6 +20,8 @@ namespace tuto_client
 
         public event EventHandler<log_btn_event> log_update;
         public delegate void DelegateRaisingEvent_Bool(bool log);
+
+        private List<Label> friend_list = new List<Label>();
 
         public Home()
         {
@@ -48,6 +53,40 @@ namespace tuto_client
         public void exit_home ()
         {
             this.Close();
+        }
+
+        //public void generate_friend_list (Dictionary<String, TcpClient> listConnectedClients)
+        public void generate_friend_list()
+        {
+            /*foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+            {
+                Label label_tmp = new Label();
+                label_tmp.Text = client_tmp.Key;
+                this.Controls.Add(label_tmp);
+                friend_list.Add(label_tmp);
+            }*/
+            int j = 0;
+            for (int i = 0; i < 3; i++)
+            {
+                j = j + 15;
+
+                Label label_tmp = new Label();
+                
+                label_tmp.AutoSize = true;
+                label_tmp.Location = new System.Drawing.Point(259, 337+j);
+                label_tmp.Name = "Label" + "test" + i;
+                label_tmp.Size = new System.Drawing.Size(107, 43);
+                label_tmp.TabIndex = 0;
+                label_tmp.Text = "test" + i;
+
+                this.Controls.Add(label_tmp);
+                friend_list.Add(label_tmp);
+            }
+        }
+
+        private void btn_friend_list_Click(object sender, EventArgs e)
+        {
+            generate_friend_list();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace tuto_server
     {
         private TcpListener server = new TcpListener(IPAddress.Any, 1980); // Creates a TCP Listener To Listen to Any IPAddress trying to connect to the program with port 1980
         private TcpClient client; // Creates a TCP Client
-        private List<TcpClient> listConnectedClients = new List<TcpClient>();
+        private Dictionary<String, TcpClient> listConnectedClients = new Dictionary<String, TcpClient>();
         private bool server_on = false;
         private delegate void SetTextCallback_safe(string name, string data);
         private delegate void SetTextCallback_listen(string data);
@@ -65,6 +65,7 @@ namespace tuto_server
                         if (client.Connected) // If you are connected
                         {
                             Net.ServerReceive(client, this); //Start Receiving
+                            update_list_client();
                         }
                     } catch
                     {
@@ -114,7 +115,7 @@ namespace tuto_server
             if (type_message.Equals("011011100110010101110111", StringComparison.OrdinalIgnoreCase))
             {
                 txtLog.Text += System.Environment.NewLine + "Status : "+ name + " connected.";
-                listConnectedClients.Add(client);
+                listConnectedClients.Add(name, client);
 
             } else if (type_message == "01101101011001010111001101110011")
             {
@@ -150,5 +151,21 @@ namespace tuto_server
             }
         }
 
+        public void update_list_client ()
+        {
+            String data = "";
+            Console.WriteLine("Clients connected : ");
+            
+            foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+            {
+                Console.WriteLine(client_tmp.Key);
+                data = data + "\n" + client_tmp.Key;
+                //marche pas 
+            }
+            Console.WriteLine(data);
+            Console.WriteLine("Fin clients connected : ");
+            //text_clients_connected.Text = data;
+
+        }
     }
 }

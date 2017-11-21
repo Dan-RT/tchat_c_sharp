@@ -18,7 +18,7 @@ namespace tuto_client
             get { return _ip; }
         }
         private string _username;
-        private TcpClient client; // Creates a TCP Client
+        private TcpClient client;
         private Home client_home;
         private Login client_login;
         private List<Tchat> tchat_Liste = new List<Tchat>(0);

@@ -32,13 +32,16 @@
             this.txtLog = new System.Windows.Forms.RichTextBox();
             this.txtSend = new System.Windows.Forms.TextBox();
             this.btn_listen = new System.Windows.Forms.Button();
+            this.text_clients_connected = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnSend
             // 
-            this.btnSend.Location = new System.Drawing.Point(153, 315);
+            this.btnSend.Location = new System.Drawing.Point(230, 485);
+            this.btnSend.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnSend.Name = "btnSend";
-            this.btnSend.Size = new System.Drawing.Size(174, 36);
+            this.btnSend.Size = new System.Drawing.Size(261, 55);
             this.btnSend.TabIndex = 1;
             this.btnSend.Text = "Send";
             this.btnSend.UseVisualStyleBackColor = true;
@@ -46,38 +49,62 @@
             // 
             // txtLog
             // 
-            this.txtLog.Location = new System.Drawing.Point(53, 86);
+            this.txtLog.Location = new System.Drawing.Point(80, 132);
+            this.txtLog.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtLog.Name = "txtLog";
-            this.txtLog.Size = new System.Drawing.Size(365, 160);
+            this.txtLog.Size = new System.Drawing.Size(546, 244);
             this.txtLog.TabIndex = 2;
             this.txtLog.Text = "";
             // 
             // txtSend
             // 
-            this.txtSend.Location = new System.Drawing.Point(53, 271);
+            this.txtSend.Location = new System.Drawing.Point(80, 417);
+            this.txtSend.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtSend.Name = "txtSend";
-            this.txtSend.Size = new System.Drawing.Size(364, 20);
+            this.txtSend.Size = new System.Drawing.Size(544, 26);
             this.txtSend.TabIndex = 3;
             // 
             // btn_listen
             // 
-            this.btn_listen.Location = new System.Drawing.Point(153, 28);
+            this.btn_listen.Location = new System.Drawing.Point(230, 43);
+            this.btn_listen.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btn_listen.Name = "btn_listen";
-            this.btn_listen.Size = new System.Drawing.Size(174, 36);
+            this.btn_listen.Size = new System.Drawing.Size(261, 55);
             this.btn_listen.TabIndex = 4;
             this.btn_listen.Text = "Listen";
             this.btn_listen.UseVisualStyleBackColor = true;
             this.btn_listen.Click += new System.EventHandler(this.btn_listen_Click);
             // 
+            // text_clients_connected
+            // 
+            this.text_clients_connected.AutoSize = true;
+            this.text_clients_connected.Location = new System.Drawing.Point(755, 135);
+            this.text_clients_connected.Name = "text_clients_connected";
+            this.text_clients_connected.Size = new System.Drawing.Size(70, 20);
+            this.text_clients_connected.TabIndex = 5;
+            this.text_clients_connected.Text = "No client";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(755, 60);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(136, 20);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "Clients connected";
+            // 
             // Server_side
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(475, 399);
+            this.ClientSize = new System.Drawing.Size(1022, 614);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.text_clients_connected);
             this.Controls.Add(this.btn_listen);
             this.Controls.Add(this.txtSend);
             this.Controls.Add(this.txtLog);
             this.Controls.Add(this.btnSend);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Server_side";
             this.Text = "Server";
             this.ResumeLayout(false);
@@ -90,5 +117,7 @@
         private System.Windows.Forms.RichTextBox txtLog;
         private System.Windows.Forms.TextBox txtSend;
         private System.Windows.Forms.Button btn_listen;
+        private System.Windows.Forms.Label text_clients_connected;
+        private System.Windows.Forms.Label label2;
     }
 }
