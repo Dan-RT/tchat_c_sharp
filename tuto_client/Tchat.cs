@@ -51,12 +51,51 @@ namespace tuto_client
         
         public void update_message_feed (byte[] data)
         {
-            if (Encoding.Default.GetString(data) == "01110010011001011110011101110101")
+            //string message = "@" + this._username + "#01101101011001010111001101110011" + "@" + receiver + "#" + pe.Message;
+
+            String data_string = Encoding.Default.GetString(data);
+
+            if (data_string == "01110010011001011110011101110101")
             {
                 Messages_Feed.Text += System.Environment.NewLine + "Status : Connected to server.";
-            } else {
-                Messages_Feed.Text += System.Environment.NewLine + "Server : " + Encoding.Default.GetString(data); // Encoding.Default.GetString(data); Converts Bytes Received to String
+            } else
+            {
+                char[] delimiterChars = { '@', '#' };
+                string[] words = data_string.Split(delimiterChars);
+
+                foreach (string s in words)
+                {
+                    System.Console.WriteLine(s);
+                }
+                //words[1] --> pseudo du mec qui envoie
+                //words[2] --> type du message
+                //words[3] --> optionnel : pseudo du receveur
+                //words[4] --> optionnel : message pour le receveur
+
+                string sender = words[1];
+                string type_message = words[2];
+                string message = words[4];
+
+                //MessageBox.Show("Type message : " + type_message);
+
+                //not secured
+                data_string = sender + " : " + message;
+                Messages_Feed.Text += System.Environment.NewLine + data_string;
+
+                /*
+                if (type_message == "011011100110010101110111")     //problem here :(
+                {
+                    //string receiver = words[3];
+                    data_string = sender + " : " + message;
+                    Messages_Feed.Text += System.Environment.NewLine + data_string; 
+                } else
+                {
+                    Messages_Feed.Text += System.Environment.NewLine + "Message error.";
+                    MessageBox.Show("Type message : " + type_message + " Sender : " + sender + " Message : " + message);
+                }
+                */
             }
+            
         }
 
         public void update_message_feed(string data)
@@ -64,6 +103,7 @@ namespace tuto_client
             // InvokeRequired required compares the thread ID of the
             // calling thread to the thread ID of the creating thread.
             // If these threads are different, it returns true.
+            
             if (this.Messages_Feed.InvokeRequired)
             {
                 SetTextCallback_safe d = new SetTextCallback_safe(update_message_feed);

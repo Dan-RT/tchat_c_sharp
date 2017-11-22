@@ -115,10 +115,16 @@ namespace tuto_client
                             source.loss_connection();
                             break;
                         } else {
-                            client_tchat.Invoke((MethodInvoker)delegate // To Write the Received data
+                            try
                             {
-                                client_tchat.update_message_feed(data);
-                            });
+                                client_tchat.Invoke((MethodInvoker)delegate // To Write the Received data
+                                {
+                                    client_tchat.update_message_feed(data);
+                                });
+                            } catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                            }
                         }
                     }
                 } catch (System.IO.IOException ex)

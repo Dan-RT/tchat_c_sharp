@@ -18,7 +18,7 @@ namespace tuto_server
         private TcpClient client; // Creates a TCP Client
         private Dictionary<String, TcpClient> listConnectedClients = new Dictionary<String, TcpClient>();
         private bool server_on = false;
-        private delegate void SetTextCallback_safe(string name, string data);
+        private delegate void SetTextCallback_safe(string data);
         private delegate void SetTextCallback_listen(string data);
         
         public Server_side()
@@ -51,7 +51,7 @@ namespace tuto_server
             server.Start(); // Starts Listening to Any IPAddress trying to connect to the program with port 1980
             btn_listen.Text = "Stop Listening";
             Console.WriteLine("Waiting For Connection");
-            change_text("", "Status : Waiting For Connection...");
+            change_text("Status : Waiting For Connection...");
             server_on = true;
             new Thread(() => // Creates a New Thread (like a timer)
             {
@@ -71,7 +71,7 @@ namespace tuto_server
                     {
                         //detect when server is stopped
                         server_on = false;
-                        change_text("", "Status : Server is off.");
+                        change_text("Status : Server is off.");
                         change_text_btn_listen("Listen");
                     }
                 }
@@ -93,7 +93,7 @@ namespace tuto_server
             }
         }
 
-        public void change_text(byte[] data)
+        public void message_handling(byte[] data)
         {
             string data_string = Encoding.Default.GetString(data);
             Console.WriteLine(data_string);
@@ -112,20 +112,29 @@ namespace tuto_server
             string name = words[1];
             string type_message = words[2];
             
-            if (type_message.Equals("011011100110010101110111", StringComparison.OrdinalIgnoreCase))
-            {
-                txtLog.Text += System.Environment.NewLine + "Status : "+ name + " connected.";
+            if (type_message.Equals("011011100110010101110111", StringComparison.OrdinalIgnoreCase)) {
+                //connection
+                change_text("Status : " + name + " connected.");
                 listConnectedClients.Add(name, client);
 
-            } else if (type_message == "01101101011001010111001101110011")
-            {
+            } else if (type_message == "01101101011001010111001101110011") {
+                //normal message
                 string receiver = words[3];
                 string message = words[4];
-                txtLog.Text += System.Environment.NewLine + name + " to " + receiver + " : " + message;
+                change_text(name + " to " + receiver + " : " + message);
+
+                foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+                {
+                    if(name != client_tmp.Key)
+                    {
+                        message = data_string;
+                        Net.ServerSend(client_tmp.Value, message);
+                    }
+                }
             }
         }
 
-        public void change_text(string name, string data)
+        private void change_text(string data)
         {
             if (this.txtLog.InvokeRequired)
             {

@@ -46,7 +46,7 @@ namespace tuto_server
                         stream.Read(data, 0, data.Length); //Receives The Real Data not the Size
                         server_obj.Invoke((MethodInvoker)delegate // To Write the Received data
                         {
-                            server_obj.change_text(data);
+                            server_obj.message_handling(data);
                         });
                     }
                 } catch {
