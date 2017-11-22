@@ -162,19 +162,33 @@ namespace tuto_server
 
         public void update_list_client ()
         {
-            String data = "";
-            Console.WriteLine("Clients connected : ");
-            
-            foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+            //String data = "";
+            new Thread(() =>
             {
-                Console.WriteLine(client_tmp.Key);
-                data = data + "\n" + client_tmp.Key;
-                //marche pas 
-            }
-            Console.WriteLine(data);
-            Console.WriteLine("Fin clients connected : ");
-            //text_clients_connected.Text = data;
+                while(server_on)
+                {
+                    Console.WriteLine("Clients connected : ");
 
+                    foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+                    {
+                        if (client_tmp.Value.Connected)
+                        {
+                            Console.WriteLine(client_tmp.Key + " is connected.");
+                        }
+                        else
+                        {
+                            Console.WriteLine(client_tmp.Key + " is gone :( ");
+                            listConnectedClients.Remove(client_tmp.Key);
+                        }
+                        //data = data + "\n" + client_tmp.Key;      //marche pas 
+                    }
+                    Console.WriteLine("Fin clients connected : ");
+                    //text_clients_connected.Text = data;
+
+                    Thread.Sleep(5000);
+                }
+            }).Start(); // Start the Thread
+            
         }
     }
 }

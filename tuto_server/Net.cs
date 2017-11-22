@@ -28,7 +28,7 @@ namespace tuto_server
                 Console.WriteLine(ex);
             }
         }
-
+        
         public static void ServerReceive(TcpClient client, Server_side server_obj)
         {
             int i;
