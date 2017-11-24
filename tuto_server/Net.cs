@@ -28,6 +28,28 @@ namespace tuto_server
                 Console.WriteLine(ex);
             }
         }
+
+        public static void ServerBroadcast (Dictionary<String, TcpClient> listConnectedClients, string msg)
+        {
+            foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+            {
+                try
+                {
+                    NetworkStream stream = client_tmp.Value.GetStream(); 
+                    byte[] data; 
+                    data = Encoding.Default.GetBytes(msg); 
+                    int length = data.Length; 
+                    byte[] datalength = new byte[4]; 
+                    datalength = BitConverter.GetBytes(length); 
+                    stream.Write(datalength, 0, 4); 
+                    stream.Write(data, 0, data.Length); 
+                }
+                catch (System.IO.IOException ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
+        }
         
         public static void ServerReceive(TcpClient client, Server_side server_obj)
         {

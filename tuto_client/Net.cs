@@ -86,7 +86,7 @@ namespace tuto_client
             }).Start();
         }
 
-        public void ClientReceive(Client_management source, TcpClient client, Tchat client_tchat)
+        public void ClientReceive(Client_management client_obj, TcpClient client, Tchat client_tchat)
         {
             int i = 0;
             byte[] datalength = new byte[4]; // creates a new byte with length 4 ( used for receivng data's lenght)
@@ -108,24 +108,11 @@ namespace tuto_client
                         // how to make a byte E.X byte[] examlpe = new byte[the size of the byte here] , i used BitConverter.ToInt32(datalength,0) cuz i received the length of the data in byte called datalength :D
                         byte[] data = new byte[BitConverter.ToInt32(datalength, 0)]; // Creates a Byte for the data to be Received On
                         stream.Read(data, 0, data.Length); //Receives The Real Data not the Size
-                        
-                        if (Encoding.Default.GetString(data) == "0110000101100010011011110111001001110100")
+                        client_obj.message_handling(data, client_tchat);
+                        /*client_obj.Invoke((MethodInvoker)delegate // To Write the Received data
                         {
-                            MessageBox.Show("La connection avec le server a été perdu.");
-                            source.loss_connection();
-                            break;
-                        } else {
-                            try
-                            {
-                                client_tchat.Invoke((MethodInvoker)delegate // To Write the Received data
-                                {
-                                    client_tchat.update_message_feed(data);
-                                });
-                            } catch (Exception e)
-                            {
-                                Console.WriteLine(e);
-                            }
-                        }
+                            client_obj.message_handling(data, client_tchat);
+                        })¨*/
                     }
                 } catch (System.IO.IOException ex)
                 {

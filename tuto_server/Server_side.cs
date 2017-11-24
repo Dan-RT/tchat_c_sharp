@@ -139,7 +139,7 @@ namespace tuto_server
             if (this.txtLog.InvokeRequired)
             {
                 SetTextCallback_safe d = new SetTextCallback_safe(change_text);
-                this.Invoke(d, new object[] { "", data });
+                this.Invoke(d, new object[] { data });
             }
             else
             {
@@ -179,16 +179,35 @@ namespace tuto_server
                         {
                             Console.WriteLine(client_tmp.Key + " is gone :( ");
                             listConnectedClients.Remove(client_tmp.Key);
+                            change_text("Status : " + client_tmp.Key + " is gone.");
+                            
+                            Console.WriteLine("Actualisation de la liste en cours...");
+                            break;
                         }
                         //data = data + "\n" + client_tmp.Key;      //marche pas 
                     }
                     Console.WriteLine("Fin clients connected : ");
                     //text_clients_connected.Text = data;
 
+                    Net.ServerBroadcast(listConnectedClients, listConnectedClients_parser());
+
                     Thread.Sleep(5000);
                 }
             }).Start(); // Start the Thread
-            
+        }
+
+        public string listConnectedClients_parser ()
+        {
+            string list = "@server#01100011011000010111001101110100";
+            foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+            {
+                if (client_tmp.Value.Connected) //you never know ahah
+                {
+                    list += "@" + client_tmp.Key;
+                }
+            }
+            Console.WriteLine(list);
+            return list;
         }
     }
 }

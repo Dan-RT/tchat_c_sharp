@@ -35,6 +35,7 @@ namespace tuto_client
             string message = Text_Send.Text;
             if (message != "")
             {
+                update_message_feed("You : " + message);
                 Send_update(this, new send_btn_event(message));
             }
         }

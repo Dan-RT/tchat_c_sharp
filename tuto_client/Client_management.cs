@@ -22,6 +22,7 @@ namespace tuto_client
         private Home client_home;
         private Login client_login;
         private List<Tchat> tchat_Liste = new List<Tchat>(0);
+        private List<String> people_connected = new List<String>(0);
         private Thread login;
         private Thread home = null;
         private Net Net = null;
@@ -169,6 +170,70 @@ namespace tuto_client
             }
             MessageBox.Show("Error : Tchat not found to be deleted.");
             return false;
+        }
+
+        public void message_handling (byte[] data, Tchat client_tchat)
+        {
+            string data_string = Encoding.Default.GetString(data);
+            Console.WriteLine("Message debug : " + data_string);
+            Console.WriteLine(data_string);
+            char[] delimiterChars = { '@', '#' };
+            string[] words = data_string.Split(delimiterChars);
+            int cpt = 1;
+
+            try
+            {
+                foreach (string s in words)
+                {
+                    System.Console.WriteLine(s);
+                }
+                //words[1] --> pseudo du mec qui envoie
+                //words[2] --> type du message
+                //words[3] --> optionnel : pseudo du receveur
+                //words[4] --> optionnel : message pour le receveur
+
+                string name = words[1];
+                string type_message = words[2];
+
+                if (data_string == "0110000101100010011011110111001001110100")  //à changer pour le bon format
+                {
+                    MessageBox.Show("La connection avec le server a été perdu.");
+                    loss_connection();
+                }
+                else if (type_message == "01100011011000010111001101110100")
+                {
+                    Console.WriteLine("Liste de clients reçue");
+                    people_connected.Clear();
+                    Console.WriteLine("People connected :");
+                    foreach (string person in words)
+                    {
+                        if(cpt > 2)
+                        {
+                            Console.WriteLine(person);
+                            people_connected.Add(person);
+                        }
+                        cpt++;
+                    }
+                    Console.WriteLine("Fin people connected;");
+
+                }
+                else if (type_message == "01101101011001010111001101110011")
+                {
+                    try
+                    {
+                        client_tchat.Invoke((MethodInvoker)delegate // To Write the Received data
+                        {
+                            client_tchat.update_message_feed(data);
+                        });
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+            } catch (Exception e) {
+                Console.WriteLine(e);
+            }
         }
 
     }
