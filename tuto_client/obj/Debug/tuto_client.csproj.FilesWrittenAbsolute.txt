@@ -1,0 +1,11 @@
+/Users/Daniel/Google Drive/M1/Semestre 7/C#/Projet/Projet/WindowsFormsApp1/tuto_client/obj/Debug/.NETFramework,Version=v4.6.1.AssemblyAttribute.cs
+/Users/Daniel/Google Drive/M1/Semestre 7/C#/Projet/Projet/WindowsFormsApp1/tuto_client/obj/Debug/tuto_client.Client_side.resources
+/Users/Daniel/Google Drive/M1/Semestre 7/C#/Projet/Projet/WindowsFormsApp1/tuto_client/obj/Debug/tuto_client.Login.resources
+/Users/Daniel/Google Drive/M1/Semestre 7/C#/Projet/Projet/WindowsFormsApp1/tuto_client/obj/Debug/tuto_client.Home.resources
+/Users/Daniel/Google Drive/M1/Semestre 7/C#/Projet/Projet/WindowsFormsApp1/tuto_client/obj/Debug/tuto_client.Tchat.resources
+/Users/Daniel/Google Drive/M1/Semestre 7/C#/Projet/Projet/WindowsFormsApp1/tuto_client/obj/Debug/tuto_client.Properties.Resources.resources
+/Users/Daniel/Google Drive/M1/Semestre 7/C#/Projet/Projet/WindowsFormsApp1/tuto_client/bin/Debug/tuto_client.exe.config
+/Users/Daniel/Google Drive/M1/Semestre 7/C#/Projet/Projet/WindowsFormsApp1/tuto_client/bin/Debug/tuto_client.pdb
+/Users/Daniel/Google Drive/M1/Semestre 7/C#/Projet/Projet/WindowsFormsApp1/tuto_client/bin/Debug/tuto_client.exe
+/Users/Daniel/Google Drive/M1/Semestre 7/C#/Projet/Projet/WindowsFormsApp1/tuto_client/obj/Debug/tuto_client.exe
+/Users/Daniel/Google Drive/M1/Semestre 7/C#/Projet/Projet/WindowsFormsApp1/tuto_client/obj/Debug/tuto_client.pdb

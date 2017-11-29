@@ -117,6 +117,7 @@ namespace tuto_client
                 } catch (System.IO.IOException ex)
                 {
                     Console.WriteLine(ex);
+                    MessageBox.Show("inter thread operation");
                 }
             }).Start(); // Start the Thread
         }

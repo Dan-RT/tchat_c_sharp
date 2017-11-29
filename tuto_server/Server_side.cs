@@ -121,7 +121,8 @@ namespace tuto_server
                 //normal message
                 string receiver = words[3];
                 string message = words[4];
-                change_text(name + " to " + receiver + " : " + message);
+                //change_text(name + " to " + receiver + " : " + message);
+                change_text(name + " says :  " + message);
 
                 foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
                 {

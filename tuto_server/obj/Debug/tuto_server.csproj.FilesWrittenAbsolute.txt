@@ -1,0 +1,8 @@
+/Users/Daniel/Google Drive/M1/Semestre 7/C#/Projet/Projet/WindowsFormsApp1/tuto_server/obj/Debug/.NETFramework,Version=v4.6.1.AssemblyAttribute.cs
+/Users/Daniel/Google Drive/M1/Semestre 7/C#/Projet/Projet/WindowsFormsApp1/tuto_server/obj/Debug/tuto_server.Properties.Resources.resources
+/Users/Daniel/Google Drive/M1/Semestre 7/C#/Projet/Projet/WindowsFormsApp1/tuto_server/obj/Debug/tuto_server.Server_side.resources
+/Users/Daniel/Google Drive/M1/Semestre 7/C#/Projet/Projet/WindowsFormsApp1/tuto_server/bin/Debug/tuto_server.exe.config
+/Users/Daniel/Google Drive/M1/Semestre 7/C#/Projet/Projet/WindowsFormsApp1/tuto_server/bin/Debug/tuto_server.pdb
+/Users/Daniel/Google Drive/M1/Semestre 7/C#/Projet/Projet/WindowsFormsApp1/tuto_server/bin/Debug/tuto_server.exe
+/Users/Daniel/Google Drive/M1/Semestre 7/C#/Projet/Projet/WindowsFormsApp1/tuto_server/obj/Debug/tuto_server.exe
+/Users/Daniel/Google Drive/M1/Semestre 7/C#/Projet/Projet/WindowsFormsApp1/tuto_server/obj/Debug/tuto_server.pdb

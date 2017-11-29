@@ -153,7 +153,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(654, 525);
+            this.ClientSize = new System.Drawing.Size(663, 451);
             this.Controls.Add(this.btn_friend_list);
             this.Controls.Add(this.logout_btn);
             this.Controls.Add(this.status);

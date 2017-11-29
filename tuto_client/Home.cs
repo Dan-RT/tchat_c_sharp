@@ -56,16 +56,32 @@ namespace tuto_client
         }
 
         //public void generate_friend_list (Dictionary<String, TcpClient> listConnectedClients)
-        public void generate_friend_list()
+        public void generate_friend_list(List<String> people_connected)
         {
-            /*foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+            //foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+            friend_list.Clear();
+            int j = 0;
+            Console.WriteLine("Home people_connected");
+            foreach (String person_tmp in people_connected)
             {
+                Console.WriteLine(person_tmp);
                 Label label_tmp = new Label();
-                label_tmp.Text = client_tmp.Key;
+                label_tmp.AutoSize = true;
+                label_tmp.Location = new System.Drawing.Point(259, 337 + j);
+                label_tmp.Name = "Label" + "test" + j;
+                label_tmp.Size = new System.Drawing.Size(107, 43);
+                label_tmp.TabIndex = 0;
+                label_tmp.Text = person_tmp;
+
                 this.Controls.Add(label_tmp);
                 friend_list.Add(label_tmp);
-            }*/
-            int j = 0;
+
+                j = j + 15;
+            }
+            Console.WriteLine("End home people_connected");
+
+
+            /*
             for (int i = 0; i < 3; i++)
             {
                 j = j + 15;
@@ -81,12 +97,13 @@ namespace tuto_client
 
                 this.Controls.Add(label_tmp);
                 friend_list.Add(label_tmp);
-            }
+            }*/
         }
 
         private void btn_friend_list_Click(object sender, EventArgs e)
         {
-            generate_friend_list();
+            //generate_friend_list();
         }
+        
     }
 }

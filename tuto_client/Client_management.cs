@@ -34,7 +34,7 @@ namespace tuto_client
             Application.SetCompatibleTextRenderingDefault(false);
             Net = new Net();
             Net.log_update += connection_management;
-
+            
             login = new Thread(new ThreadStart(login_start));
             login.Start();
         }
@@ -87,12 +87,10 @@ namespace tuto_client
 
                     Net.ClientSend(this.client, "@"+username+"#"+ "011011100110010101110111");
                     client_login.RequestStop();
-                    MessageBox.Show("Ici ça marche.");
 
                     /*Console.WriteLine("home boot");
                     home = new Thread(new ThreadStart(home_start));
                     home.Start();*/
-                    
                     
                     if (home == null)
                     {
@@ -215,6 +213,8 @@ namespace tuto_client
                         cpt++;
                     }
                     Console.WriteLine("Fin people connected;");
+                    client_home.generate_friend_list(people_connected);
+                    Console.WriteLine("data envoyé au Home");
 
                 }
                 else if (type_message == "01101101011001010111001101110011")
