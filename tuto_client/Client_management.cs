@@ -121,7 +121,7 @@ namespace tuto_client
         private void Send_Message (object sender, Send_btn_event pe)
         {
             Tchat tchat = sender as Tchat;
-            string receiver = "r"; /// probleme ici
+            string receiver = "Michel"; /// probleme ici
             string message = "@" + this._username + "#message" + "@" + receiver + "#" + pe.Message;
             tchat.Message_sent(Net.ClientSend(client, message));
         }
