@@ -11,11 +11,12 @@ namespace tuto_client
 {
     class Net
     {
-        public event EventHandler<log_btn_event> log_update;
+        public event EventHandler<Log_btn_event> Log_update;
         public delegate void DelegateRaisingEvent_Bool(bool log);
 
         public bool ClientSend(TcpClient client, string msg)
         {
+            System.Console.WriteLine("clientSend called");
             try
             {
                 NetworkStream stream = client.GetStream(); //Gets The Stream of The Connection
@@ -50,7 +51,6 @@ namespace tuto_client
         
         public void Home_listening(Client_management client_mana, TcpClient client)
         {
-            int i = 0;
             byte[] datalength = new byte[4];
             NetworkStream stream = client.GetStream();
 
@@ -63,7 +63,7 @@ namespace tuto_client
                         //on écoute
                     }
                     MessageBox.Show("La connection avec le server a été perdu.");
-                    client_mana.loss_connection();
+                    client_mana.Loss_connection();
 
                     /*
                     while ((i = stream.Read(datalength, 0, 4)) != 0)//Keeps Trying to Receive the Size of the Message or Data
@@ -71,7 +71,7 @@ namespace tuto_client
                         byte[] data = new byte[BitConverter.ToInt32(datalength, 0)];
                         stream.Read(data, 0, data.Length);
 
-                        if (Encoding.Default.GetString(data) == "0110000101100010011011110111001001110100")
+                        if (Encoding.Default.GetString(data) == "server_close")
                         {
                             MessageBox.Show("La connection avec le server a été perdu.");
                             client_mana.loss_connection();
@@ -90,7 +90,7 @@ namespace tuto_client
         {
             int i = 0;
             byte[] datalength = new byte[4]; // creates a new byte with length 4 ( used for receivng data's lenght)
-
+            System.Console.WriteLine("clientReceive called");
             NetworkStream stream = client.GetStream(); //Gets The Stream of The Connection
 
             if (!client.Connected)
@@ -109,17 +109,19 @@ namespace tuto_client
                         byte[] data = new byte[BitConverter.ToInt32(datalength, 0)]; // Creates a Byte for the data to be Received On
                         stream.Read(data, 0, data.Length); //Receives The Real Data not the Size
                         
-                        if (Encoding.Default.GetString(data) == "0110000101100010011011110111001001110100")
+                        if (Encoding.Default.GetString(data) == "server_close")
                         {
-                            MessageBox.Show("La connection avec le server a été perdu.");
-                            source.loss_connection();
+                            MessageBox.Show("La connection avec le serveur a été perdue.");
+                            source.Loss_connection();
                             break;
                         } else {
                             try
                             {
                                 client_tchat.Invoke((MethodInvoker)delegate // To Write the Received data
+                                /*TODO: erreur ici : System.InvalidOperationException:
+                                 * Impossible d'appeler Invoke ou BeginInvoke sur un contrôle tant que le handle de fenêtre n'a pas été créé*/
                                 {
-                                    client_tchat.update_message_feed(data);
+                                    client_tchat.Update_message_feed(data);
                                 });
                             } catch (Exception e)
                             {

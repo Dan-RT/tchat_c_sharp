@@ -24,3 +24,16 @@ Z:\Users\Daniel\Google Drive\M1\Semestre 7\C#\Projet\Projet\WindowsFormsApp1\tut
 Z:\Users\Daniel\Google Drive\M1\Semestre 7\C#\Projet\Projet\WindowsFormsApp1\tuto_client\obj\Debug\tuto_client.csproj.CoreCompileInputs.cache
 Z:\Users\Daniel\Google Drive\M1\Semestre 7\C#\Projet\Projet\WindowsFormsApp1\tuto_client\obj\Debug\tuto_client.exe
 Z:\Users\Daniel\Google Drive\M1\Semestre 7\C#\Projet\Projet\WindowsFormsApp1\tuto_client\obj\Debug\tuto_client.pdb
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_client\bin\Debug\tuto_client.exe.config
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_client\bin\Debug\tuto_client.exe
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_client\bin\Debug\tuto_client.pdb
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.csprojResolveAssemblyReference.cache
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.Client_side.resources
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.Login.resources
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.Home.resources
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.Tchat.resources
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.Properties.Resources.resources
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.csproj.GenerateResource.Cache
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.csproj.CoreCompileInputs.cache
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.exe
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.pdb

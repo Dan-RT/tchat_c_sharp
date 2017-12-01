@@ -12,7 +12,7 @@ namespace tuto_client
 {
     public partial class Login : Form
     {
-        public event EventHandler<log_btn_event> log_update;
+        public event EventHandler<Log_btn_event> Log_update;
         public delegate void DelegateRaisingEvent_Bool(bool log);
 
         public Login()
@@ -20,11 +20,11 @@ namespace tuto_client
             InitializeComponent();
         }
         
-        private void btn_login_Click(object sender, EventArgs e)
+        private void Btn_login_Click(object sender, EventArgs e)
         {
             if (text_usename.Text != "")
             {
-                log_update(this, new log_btn_event(true, text_usename.Text));
+                Log_update(this, new Log_btn_event(true, text_usename.Text));
             } else
             {
                 MessageBox.Show("Please enter a username.");

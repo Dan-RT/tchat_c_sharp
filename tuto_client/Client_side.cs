@@ -36,7 +36,7 @@ namespace tuto_client
                 Net.ClientReceive(this.client, this.stream, this); //Starts Receiving When Connected
                 Console.WriteLine("Connected");
                 change_text("Status : Waiting for connection...");
-                Net.ClientSend(this.client, this.stream, "011011100110010101110111");
+                Net.ClientSend(this.client, this.stream, "connection");
             }
             catch (Exception ex)
             {
@@ -61,7 +61,7 @@ namespace tuto_client
         
         public void change_text (byte[] data)
         {
-            if (Encoding.Default.GetString(data) == "01110010011001011110011101110101")
+            if (Encoding.Default.GetString(data) == "client_connected")
             {
                 txtLog.Text += System.Environment.NewLine + "Status : Connected to server.";
             } else

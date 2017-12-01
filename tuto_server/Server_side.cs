@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Net;
@@ -26,16 +22,16 @@ namespace tuto_server
             InitializeComponent();
         }
         
-        private void btn_listen_Click(object sender, EventArgs e)
+        private void Btn_listen_Click(object sender, EventArgs e)
          {
             if (!server_on)
             {
-                start_listening();
+                Start_listening();
             }
             else
             {
                 try {
-                    Net.ServerSend(client, "0110000101100010011011110111001001110100");
+                    Net.ServerSend(client, "server_close");
                     //on notifie le client que le server ferme
                 } catch (Exception ex)
                 {
@@ -46,12 +42,12 @@ namespace tuto_server
             }
         }
 
-        private void start_listening ()
+        private void Start_listening ()
         {
             server.Start(); // Starts Listening to Any IPAddress trying to connect to the program with port 1980
             btn_listen.Text = "Stop Listening";
             Console.WriteLine("Waiting For Connection");
-            change_text("Status : Waiting For Connection...");
+            Change_text("Status : Waiting For Connection...");
             server_on = true;
             new Thread(() => // Creates a New Thread (like a timer)
             {
@@ -60,25 +56,25 @@ namespace tuto_server
                     try
                     {
                         client = server.AcceptTcpClient(); //Waits for the Client To Connect
-                        Net.ServerSend(client, "01110010011001011110011101110101");
+                        Net.ServerSend(client, "client_connected");
                         Console.WriteLine("Connected To Client");
                         if (client.Connected) // If you are connected
                         {
                             Net.ServerReceive(client, this); //Start Receiving
-                            update_list_client();
+                            Update_list_client();
                         }
                     } catch
                     {
                         //detect when server is stopped
                         server_on = false;
-                        change_text("Status : Server is off.");
-                        change_text_btn_listen("Listen");
+                        Change_text("Status : Server is off.");
+                        Change_text_btn_listen("Listen");
                     }
                 }
             }).Start();
         }
 
-        private void btnSend_Click_1(object sender, EventArgs e)
+        private void BtnSend_Click_1(object sender, EventArgs e)
         {
             try
             {
@@ -93,40 +89,43 @@ namespace tuto_server
             }
         }
 
-        public void message_handling(byte[] data)
+        public void Message_handling(byte[] data)
         {
+
             string data_string = Encoding.Default.GetString(data);
             Console.WriteLine(data_string);
             char[] delimiterChars = { '@', '#'};
-            string[] words = data_string.Split(delimiterChars);
+            string[] words = data_string.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries);
 
-            foreach (string s in words)
+            for (var i = 0; i < words.Length; i++)
             {
-                System.Console.WriteLine(s);
+                System.Console.WriteLine("server : " + words[i]);
             }
-            //words[1] --> pseudo du mec qui envoie
-            //words[2] --> type du message
-            //words[3] --> optionnel : pseudo du receveur
-            //words[4] --> optionnel : message pour le receveur
+            //words[0] --> pseudo du mec qui envoie
+            //words[1] --> type du message
+            //words[2] --> optionnel : pseudo du receveur
+            //words[3] --> optionnel : message pour le receveur
 
-            string name = words[1];
-            string type_message = words[2];
-            
-            if (type_message.Equals("011011100110010101110111", StringComparison.OrdinalIgnoreCase)) {
+            string name = words[0];
+            string type_message = words[1];
+            System.Console.WriteLine(type_message);
+            if (type_message.Equals("connection", StringComparison.OrdinalIgnoreCase)) {
                 //connection
-                change_text("Status : " + name + " connected.");
+                Change_text("Status : " + name + " connected.");
                 listConnectedClients.Add(name, client);
 
-            } else if (type_message == "01101101011001010111001101110011") {
+            } else if (type_message == "message") {
                 //normal message
-                string receiver = words[3];
-                string message = words[4];
-                change_text(name + " to " + receiver + " : " + message);
+                string receiver = words[2];
+                string message = words[3];
+                Change_text(name + " to " + receiver + " : " + message);
 
                 foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
                 {
-                    if(name != client_tmp.Key)
+                    System.Console.WriteLine("teeeest1");
+                    if (name != client_tmp.Key)
                     {
+                        System.Console.WriteLine("teeeeest2");
                         message = data_string;
                         Net.ServerSend(client_tmp.Value, message);
                     }
@@ -134,11 +133,11 @@ namespace tuto_server
             }
         }
 
-        private void change_text(string data)
+        private void Change_text(string data)
         {
             if (this.txtLog.InvokeRequired)
             {
-                SetTextCallback_safe d = new SetTextCallback_safe(change_text);
+                SetTextCallback_safe d = new SetTextCallback_safe(Change_text);
                 this.Invoke(d, new object[] { "", data });
             }
             else
@@ -147,11 +146,11 @@ namespace tuto_server
             }
         }
 
-        public void change_text_btn_listen (string data)
+        public void Change_text_btn_listen (string data)
         {
             if (this.btn_listen.InvokeRequired)
             {
-                SetTextCallback_listen d = new SetTextCallback_listen(change_text_btn_listen);
+                SetTextCallback_listen d = new SetTextCallback_listen(Change_text_btn_listen);
                 this.Invoke(d, new object[] { data });
             }
             else
@@ -160,20 +159,20 @@ namespace tuto_server
             }
         }
 
-        public void update_list_client ()
+        public void Update_list_client ()
         {
             //String data = "";
             new Thread(() =>
             {
                 while(server_on)
                 {
-                    Console.WriteLine("Clients connected : ");
+                   // Console.WriteLine("Clients connected : ");
 
                     foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
                     {
                         if (client_tmp.Value.Connected)
                         {
-                            Console.WriteLine(client_tmp.Key + " is connected.");
+                            //Console.WriteLine(client_tmp.Key + " is connected.");
                         }
                         else
                         {
@@ -182,7 +181,7 @@ namespace tuto_server
                         }
                         //data = data + "\n" + client_tmp.Key;      //marche pas 
                     }
-                    Console.WriteLine("Fin clients connected : ");
+                   // Console.WriteLine("Fin clients connected : ");
                     //text_clients_connected.Text = data;
 
                     Thread.Sleep(5000);

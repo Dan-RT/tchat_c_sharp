@@ -83,7 +83,7 @@
             this.beginining_Message.TabIndex = 2;
             this.beginining_Message.TabStop = true;
             this.beginining_Message.Text = "New Message : \"Hey buddy it\'s been...\"";
-            this.beginining_Message.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.beginining_Message_LinkClicked);
+            this.beginining_Message.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Beginining_Message_LinkClicked);
             // 
             // panel2
             // 
@@ -116,7 +116,7 @@
             this.beginining_Message_2.TabIndex = 2;
             this.beginining_Message_2.TabStop = true;
             this.beginining_Message_2.Text = "New Message : \"Hey buddy it\'s been...\"";
-            this.beginining_Message_2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.beginining_Message_2_LinkClicked);
+            this.beginining_Message_2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Beginining_Message_2_LinkClicked);
             // 
             // status
             // 
@@ -137,7 +137,7 @@
             this.logout_btn.TabIndex = 6;
             this.logout_btn.Text = "Logout";
             this.logout_btn.UseVisualStyleBackColor = true;
-            this.logout_btn.Click += new System.EventHandler(this.logout_btn_Click);
+            this.logout_btn.Click += new System.EventHandler(this.Logout_btn_Click);
             // 
             // btn_friend_list
             // 
@@ -147,7 +147,7 @@
             this.btn_friend_list.TabIndex = 7;
             this.btn_friend_list.Text = "Friends";
             this.btn_friend_list.UseVisualStyleBackColor = true;
-            this.btn_friend_list.Click += new System.EventHandler(this.btn_friend_list_Click);
+            this.btn_friend_list.Click += new System.EventHandler(this.Btn_friend_list_Click);
             // 
             // Home
             // 

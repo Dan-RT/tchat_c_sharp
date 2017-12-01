@@ -45,7 +45,7 @@
             this.btnSend.TabIndex = 1;
             this.btnSend.Text = "Send";
             this.btnSend.UseVisualStyleBackColor = true;
-            this.btnSend.Click += new System.EventHandler(this.btnSend_Click_1);
+            this.btnSend.Click += new System.EventHandler(this.BtnSend_Click_1);
             // 
             // txtLog
             // 
@@ -73,7 +73,7 @@
             this.btn_listen.TabIndex = 4;
             this.btn_listen.Text = "Listen";
             this.btn_listen.UseVisualStyleBackColor = true;
-            this.btn_listen.Click += new System.EventHandler(this.btn_listen_Click);
+            this.btn_listen.Click += new System.EventHandler(this.Btn_listen_Click);
             // 
             // text_clients_connected
             // 

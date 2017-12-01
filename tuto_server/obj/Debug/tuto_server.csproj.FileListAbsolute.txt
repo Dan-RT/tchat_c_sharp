@@ -8,3 +8,13 @@
 \\psf\Google Drive\M1\Semestre 7\C#\Projet\Projet\WindowsFormsApp1\tuto_server\bin\Debug\tuto_server.pdb
 \\psf\Google Drive\M1\Semestre 7\C#\Projet\Projet\WindowsFormsApp1\tuto_server\obj\Debug\tuto_server.exe
 \\psf\Google Drive\M1\Semestre 7\C#\Projet\Projet\WindowsFormsApp1\tuto_server\obj\Debug\tuto_server.pdb
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_server\bin\Debug\tuto_server.exe.config
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_server\bin\Debug\tuto_server.exe
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_server\bin\Debug\tuto_server.pdb
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_server\obj\Debug\tuto_server.csprojResolveAssemblyReference.cache
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_server\obj\Debug\tuto_server.Properties.Resources.resources
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_server\obj\Debug\tuto_server.Server_side.resources
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_server\obj\Debug\tuto_server.csproj.GenerateResource.Cache
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_server\obj\Debug\tuto_server.csproj.CoreCompileInputs.cache
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_server\obj\Debug\tuto_server.exe
+C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_server\obj\Debug\tuto_server.pdb

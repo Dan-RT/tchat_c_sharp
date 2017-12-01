@@ -13,6 +13,7 @@ namespace tuto_server
     {
         public static void ServerSend (TcpClient client, string msg)
         {
+            System.Console.WriteLine("serverSend called");
             try
             {
                 NetworkStream stream = client.GetStream(); //Gets The Stream of The Connection
@@ -21,7 +22,7 @@ namespace tuto_server
                 int length = data.Length; // Gets the length of the byte data
                 byte[] datalength = new byte[4]; // Creates a new byte with length of 4
                 datalength = BitConverter.GetBytes(length); //put the length in a byte to send it
-                stream.Write(datalength, 0, 4); // sends the data's length
+                stream.Write(datalength, offset: 0, size: 4); // sends the data's length
                 stream.Write(data, 0, data.Length); //Sends the real data
             } catch (System.IO.IOException ex)
             {
@@ -30,10 +31,10 @@ namespace tuto_server
         }
         
         public static void ServerReceive(TcpClient client, Server_side server_obj)
-        {
+        { 
             int i;
             byte[] datalength = new byte[4]; // creates a new byte with length 4 ( used for receivng data's lenght)
-
+            System.Console.WriteLine("serverReceive called");
             NetworkStream stream = client.GetStream(); //Gets The Stream of The Connection
             new Thread(() => // Thread (like Timer)
             {
@@ -46,7 +47,7 @@ namespace tuto_server
                         stream.Read(data, 0, data.Length); //Receives The Real Data not the Size
                         server_obj.Invoke((MethodInvoker)delegate // To Write the Received data
                         {
-                            server_obj.message_handling(data);
+                            server_obj.Message_handling(data);
                         });
                     }
                 } catch {
