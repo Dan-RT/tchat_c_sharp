@@ -58,6 +58,7 @@ namespace tuto_client
 
             if (data_string == "01110010011001011110011101110101")
             {
+                //plus possible, à supprimer
                 Messages_Feed.Text += System.Environment.NewLine + "Status : Connected to server.";
             } else
             {

@@ -200,6 +200,7 @@ namespace tuto_client
                 }
                 else if (type_message == "01100011011000010111001101110100")
                 {
+                    //liste de gens connectés, ne fonctionne pas encore
                     Console.WriteLine("Liste de clients reçue");
                     people_connected.Clear();
                     Console.WriteLine("People connected :");
