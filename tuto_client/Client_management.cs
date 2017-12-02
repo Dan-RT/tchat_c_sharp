@@ -22,6 +22,7 @@ namespace tuto_client
         private Home client_home;
         private Login client_login;
         private List<Tchat> tchat_Liste = new List<Tchat>(0);
+        private List<String> people_connected = new List<String>(0);
         private Thread login;
         private Thread home = null;
         private Net Net = null;
@@ -47,10 +48,9 @@ namespace tuto_client
 
         private void Home_start()
         {
-            client_home = new Home();
+            client_home = new Home(_username);
             client_home.Log_update += Connection_management;
             client_home.Tchat_update += Open_new_tchat;
-            //Net.Home_listening(this, client);
             Application.Run(client_home);
         }
         
@@ -85,14 +85,10 @@ namespace tuto_client
                 if (client.Connected/* && Net.Client_Connection(this.client)*/) { //Starts Receiving if Connected
 
                     Net.ClientSend(this.client, "@" + username + "#" + "connection");
+                    Net.ClientReceive(this, this.client);
+                    //Net.ClientReceive(this, this.client, new_tchat);
                     client_login.RequestStop();
-                    MessageBox.Show("Ici ça marche.");
-
-                    /*Console.WriteLine("home boot");
-                    home = new Thread(new ThreadStart(home_start));
-                    home.Start();*/
-                    
-                    
+                   
                     if (home == null)
                     {
                         Console.WriteLine("home boot");
@@ -126,42 +122,126 @@ namespace tuto_client
             tchat.Message_sent(Net.ClientSend(client, message));
         }
 
-        private void Open_new_tchat(object sender, New_tchat_event p)
+        public void handling_message (string data)
         {
-            if (!Search_Name_Tchat(p.Data))
+            if (data == "client_connected")
+            {
+                //Messages_Feed.Text += System.Environment.NewLine + "Status : Connected to server.";
+            } else {
+                char[] delimiterChars = { '@', '#' };
+                string[] words = data.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries);
+
+                for (var i = 0; i < words.Length; i++)
+                {
+                    //System.Console.WriteLine(words[i]);
+                }
+
+                //pour bien implementer cette fonction on a besoin de la l
+
+                //words[0] --> pseudo du mec qui envoie
+                //words[1] --> type du message
+                //words[2] --> optionnel : pseudo du receveur
+                //words[3] --> optionnel : message pour le receveur
+
+                if (words.Length > 3)
+                {
+                    string sender = words[0];
+                    string type_message = words[1];
+                    if (type_message == "List_clients")
+                    {
+                        people_connected.Clear();
+                        for (var i = 2; i < words.Length; i++)
+                        {
+                            //System.Console.WriteLine(words[i]);
+                            people_connected.Add(words[i]);
+                        }
+                    } else
+                    {
+                        string message = words[3];
+                        Open_tchat(sender, message);
+                    }
+                }
+                
+                /*
+                if (type_message == "connection")     //problem here :(
+                {
+                    string receiver = words[2];
+                    data_string = sender + " : " + message;
+                    Messages_Feed.Text += System.Environment.NewLine + data_string; 
+                } else
+                {
+                    Messages_Feed.Text += System.Environment.NewLine + "Message error.";
+                    MessageBox.Show("Type message : " + type_message + " Sender : " + sender + " Message : " + message);
+                }*/
+
+            }
+        }
+
+        private void Open_new_tchat(object sender, New_tchat_event p)   //function which can be called from outside with a event
+        {
+            if (Search_Name_Tchat(p.Data) == null)
                 //si le Tchat n'existe pas déjà, on évite de l'ouvrir deux fois
             {
-                Tchat new_tchat = new Tchat(p.Data);
+                Tchat new_tchat = new Tchat(p.Data, this._username);
                 new_tchat.Send_update += Send_Message;
                 tchat_Liste.Add(new_tchat);
+                
                 new Thread(() =>
                 {
-                    Net.ClientReceive(this, this.client, new_tchat);
                     Application.Run(new_tchat);
-                    Search_Delete_Tchat(new_tchat.ID);
+                    Search_Delete_Tchat(new_tchat.FriendName);
                     //on enlève le tchat de la liste pour qu'on puisse le rouvrir plus tard
                     Console.WriteLine("Tchat fermé");
                 }).Start();
             }
         }
 
-        private bool Search_Name_Tchat(string name)
+        private void Open_tchat(string sender, string message)    //function to be called from client_side
         {
+            Tchat tchat = Search_Name_Tchat(sender);
+
+            if (tchat == null)
+            //si le Tchat n'existe pas déjà, on le crée
+            {
+                MessageBox.Show("New tchat");
+                tchat = new Tchat(this._username, sender);
+                tchat.Send_update += Send_Message;
+                tchat_Liste.Add(tchat);
+                
+                new Thread(() =>
+                {
+                    Application.Run(tchat);
+                    Search_Delete_Tchat(tchat.FriendName);
+                    //on enlève le tchat de la liste pour qu'on puisse le rouvrir plus tard
+                    Console.WriteLine("Tchat fermé");
+                }).Start();
+            }
+
+            //Il existe maintenant forcément, on lui balance le message
+            tchat.ThreadProcSafe(sender + " : " + message);
+
+        }
+
+        private Tchat Search_Name_Tchat(string name)
+        {
+            Console.WriteLine("Current name tested : " + name);
+
             foreach (Tchat item in tchat_Liste)
             {
-                if (item.ID == name)
+                Console.WriteLine("Current item : " + item.FriendName);
+                if (item.FriendName == name)
                 {
-                    return true;
+                    return item;
                 }
             }
-            return false;
+            return null;
         }
 
         private bool Search_Delete_Tchat(string name)
         {
             foreach (Tchat item in tchat_Liste)
             {
-                if (item.ID == name)
+                if (item.FriendName == name)
                 {
                     tchat_Liste.Remove(item);
                     return true;
@@ -170,7 +250,7 @@ namespace tuto_client
             MessageBox.Show("Error : Tchat not found to be deleted.");
             return false;
         }
-
+        
     }
 
     public class Log_btn_event : EventArgs

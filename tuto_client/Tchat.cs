@@ -6,10 +6,18 @@ namespace tuto_client
 {
     public partial class Tchat : Form
     {
-        private string _id;
-        public string ID
+        private string _name;
+        public string Name
         {
-            get { return _id; }
+            get { return _name; }
+            set { _name = Name; }
+        }
+
+        private string _friendName;
+        public string FriendName
+        {
+            get { return _friendName; }
+            set { _friendName = FriendName; }
         }
 
         delegate void SetTextCallback(string text);
@@ -18,10 +26,13 @@ namespace tuto_client
         public event EventHandler<Send_btn_event> Send_update;
         public delegate void DelegateRaisingEvent(string message);
         
-        public Tchat(string data)
+        public Tchat(string name, string friend)
         {
-            _id = data;
+            _name = name;
+            _friendName = friend;
             InitializeComponent();
+            cLient_Label.Text = "You : " + _name;
+            friend_label.Text = _friendName;
         }
 
         private void Btn_Send_Click(object sender, EventArgs e)
@@ -109,7 +120,7 @@ namespace tuto_client
             }
         }
 
-        private void ThreadProcSafe(string text)
+        public void ThreadProcSafe(string text)
         {
             this.Update_message_feed(text);
         }

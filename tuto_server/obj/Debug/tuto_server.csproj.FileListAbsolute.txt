@@ -18,3 +18,13 @@ C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_server\obj\Debug\tuto_ser
 C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_server\obj\Debug\tuto_server.csproj.CoreCompileInputs.cache
 C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_server\obj\Debug\tuto_server.exe
 C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_server\obj\Debug\tuto_server.pdb
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_server\obj\Debug\tuto_server.csprojResolveAssemblyReference.cache
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_server\obj\Debug\tuto_server.Properties.Resources.resources
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_server\obj\Debug\tuto_server.Server_side.resources
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_server\obj\Debug\tuto_server.csproj.GenerateResource.Cache
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_server\obj\Debug\tuto_server.csproj.CoreCompileInputs.cache
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_server\obj\Debug\tuto_server.exe
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_server\obj\Debug\tuto_server.pdb
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_server\bin\Debug\tuto_server.exe.config
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_server\bin\Debug\tuto_server.exe
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_server\bin\Debug\tuto_server.pdb

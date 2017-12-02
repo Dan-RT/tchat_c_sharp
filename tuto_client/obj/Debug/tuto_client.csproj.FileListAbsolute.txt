@@ -37,3 +37,16 @@ C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_client\obj\Debug\tuto_cli
 C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.csproj.CoreCompileInputs.cache
 C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.exe
 C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.pdb
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_client\bin\Debug\tuto_client.exe.config
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_client\bin\Debug\tuto_client.exe
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_client\bin\Debug\tuto_client.pdb
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.csprojResolveAssemblyReference.cache
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.Client_side.resources
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.Login.resources
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.Home.resources
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.Tchat.resources
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.Properties.Resources.resources
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.csproj.GenerateResource.Cache
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.csproj.CoreCompileInputs.cache
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.exe
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.pdb

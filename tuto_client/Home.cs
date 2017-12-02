@@ -15,6 +15,13 @@ namespace tuto_client
 {
     public partial class Home : Form
     {
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set { _name = Name; }
+        }
+
         public event EventHandler<New_tchat_event> Tchat_update;
         public delegate void DelegateRaisingEvent_String(string data);
 
@@ -23,10 +30,12 @@ namespace tuto_client
 
         private List<Label> friend_list = new List<Label>();
 
-        public Home()
+        public Home(string name)
         {
+            _name = name;
             InitializeComponent();
             Change_log_status("Connected");
+            set_static_Friend_name();
         }
         
         public void Change_log_status (string data)
@@ -40,22 +49,27 @@ namespace tuto_client
             this.Close();
         }
 
+        private void set_static_Friend_name ()
+        {
+            if (Name == "Dan") friend_name_Label.Text = "Nico";
+            if (Name == "Nico") friend_name_Label.Text = "Dan";
+        }
+
         private void Beginining_Message_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Tchat_update(this, new New_tchat_event("1"));
+            if (Name == "Dan") Tchat_update(this, new New_tchat_event("Nico"));
+            if (Name == "Nico") Tchat_update(this, new New_tchat_event("Dan"));
+            //static for now
         }
-
-        private void Beginining_Message_2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Tchat_update(this, new New_tchat_event("2"));
-        }
-
+        
         public void Exit_home ()
         {
             this.Close();
         }
 
-        //public void generate_friend_list (Dictionary<String, TcpClient> listConnectedClients)
+
+        /*  La suite est à contruire.  */
+
         public void Generate_friend_list()
         {
             /*foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)

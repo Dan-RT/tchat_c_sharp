@@ -55,5 +55,32 @@ namespace tuto_server
                 }
             }).Start(); // Start the Thread
         }
+
+
+        public static void ServerBroadcast(Server_side server, Dictionary<String, TcpClient> listConnectedClients, string msg)
+        {
+            lock (server) {
+                foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+                {
+                    try
+                    {
+                        NetworkStream stream = client_tmp.Value.GetStream();
+                        byte[] data;
+                        data = Encoding.Default.GetBytes(msg);
+                        int length = data.Length;
+                        byte[] datalength = new byte[4];
+                        datalength = BitConverter.GetBytes(length);
+                        stream.Write(datalength, 0, 4);
+                        stream.Write(data, 0, data.Length);
+                    }
+                    catch (System.IO.IOException ex)
+                    {
+                        Console.WriteLine(ex);
+                    }
+                }
+            }
+            
+        }
+
     }
 }

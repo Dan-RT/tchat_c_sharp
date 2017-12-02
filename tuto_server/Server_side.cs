@@ -159,35 +159,53 @@ namespace tuto_server
             }
         }
 
-        public void Update_list_client ()
+        public void Update_list_client()
         {
-            //String data = "";
             new Thread(() =>
             {
-                while(server_on)
+                while (server_on)
                 {
-                   // Console.WriteLine("Clients connected : ");
+                    //Console.WriteLine("Clients connected : ");
 
                     foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
                     {
                         if (client_tmp.Value.Connected)
                         {
-                            //Console.WriteLine(client_tmp.Key + " is connected.");
+                           //Console.WriteLine(client_tmp.Key + " is connected.");
                         }
                         else
                         {
                             Console.WriteLine(client_tmp.Key + " is gone :( ");
                             listConnectedClients.Remove(client_tmp.Key);
+                            Change_text("Status : " + client_tmp.Key + " is gone.");
+
+                            //Console.WriteLine("Actualisation de la liste en cours...");
+                            break;
                         }
                         //data = data + "\n" + client_tmp.Key;      //marche pas 
                     }
-                   // Console.WriteLine("Fin clients connected : ");
+                    //Console.WriteLine("Fin clients connected : ");
                     //text_clients_connected.Text = data;
+
+                    Net.ServerBroadcast(this, listConnectedClients, listConnectedClients_parser());
 
                     Thread.Sleep(5000);
                 }
             }).Start(); // Start the Thread
-            
+        }
+
+        public string listConnectedClients_parser()
+        {
+            string list = "@server#List_clients";
+            foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+            {
+                if (client_tmp.Value.Connected) //you never know ahah
+                {
+                    list += "@" + client_tmp.Key;
+                }
+            }
+            //Console.WriteLine(list);
+            return list;
         }
     }
 }

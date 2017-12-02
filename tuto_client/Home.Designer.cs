@@ -30,16 +30,12 @@
         {
             this.client_Label = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.name_Label = new System.Windows.Forms.Label();
+            this.friend_name_Label = new System.Windows.Forms.Label();
             this.beginining_Message = new System.Windows.Forms.LinkLabel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.name_Label_2 = new System.Windows.Forms.Label();
-            this.beginining_Message_2 = new System.Windows.Forms.LinkLabel();
             this.status = new System.Windows.Forms.Label();
             this.logout_btn = new System.Windows.Forms.Button();
             this.btn_friend_list = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // client_Label
@@ -54,7 +50,7 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.name_Label);
+            this.panel1.Controls.Add(this.friend_name_Label);
             this.panel1.Controls.Add(this.beginining_Message);
             this.panel1.Location = new System.Drawing.Point(39, 178);
             this.panel1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -62,15 +58,15 @@
             this.panel1.Size = new System.Drawing.Size(567, 46);
             this.panel1.TabIndex = 3;
             // 
-            // name_Label
+            // friend_name_Label
             // 
-            this.name_Label.AutoSize = true;
-            this.name_Label.Location = new System.Drawing.Point(21, 15);
-            this.name_Label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.name_Label.Name = "name_Label";
-            this.name_Label.Size = new System.Drawing.Size(113, 20);
-            this.name_Label.TabIndex = 3;
-            this.name_Label.Text = "Name Friend 1";
+            this.friend_name_Label.AutoSize = true;
+            this.friend_name_Label.Location = new System.Drawing.Point(21, 15);
+            this.friend_name_Label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.friend_name_Label.Name = "friend_name_Label";
+            this.friend_name_Label.Size = new System.Drawing.Size(113, 20);
+            this.friend_name_Label.TabIndex = 3;
+            this.friend_name_Label.Text = "Name Friend 1";
             // 
             // beginining_Message
             // 
@@ -84,39 +80,6 @@
             this.beginining_Message.TabStop = true;
             this.beginining_Message.Text = "New Message : \"Hey buddy it\'s been...\"";
             this.beginining_Message.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Beginining_Message_LinkClicked);
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.name_Label_2);
-            this.panel2.Controls.Add(this.beginining_Message_2);
-            this.panel2.Location = new System.Drawing.Point(39, 262);
-            this.panel2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(567, 46);
-            this.panel2.TabIndex = 4;
-            // 
-            // name_Label_2
-            // 
-            this.name_Label_2.AutoSize = true;
-            this.name_Label_2.Location = new System.Drawing.Point(21, 15);
-            this.name_Label_2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.name_Label_2.Name = "name_Label_2";
-            this.name_Label_2.Size = new System.Drawing.Size(113, 20);
-            this.name_Label_2.TabIndex = 3;
-            this.name_Label_2.Text = "Name Friend 2";
-            // 
-            // beginining_Message_2
-            // 
-            this.beginining_Message_2.AutoSize = true;
-            this.beginining_Message_2.LinkColor = System.Drawing.Color.Black;
-            this.beginining_Message_2.Location = new System.Drawing.Point(250, 15);
-            this.beginining_Message_2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.beginining_Message_2.Name = "beginining_Message_2";
-            this.beginining_Message_2.Size = new System.Drawing.Size(283, 20);
-            this.beginining_Message_2.TabIndex = 2;
-            this.beginining_Message_2.TabStop = true;
-            this.beginining_Message_2.Text = "New Message : \"Hey buddy it\'s been...\"";
-            this.beginining_Message_2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Beginining_Message_2_LinkClicked);
             // 
             // status
             // 
@@ -157,7 +120,6 @@
             this.Controls.Add(this.btn_friend_list);
             this.Controls.Add(this.logout_btn);
             this.Controls.Add(this.status);
-            this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.client_Label);
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -165,8 +127,6 @@
             this.Text = "Home";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -177,10 +137,7 @@
         private System.Windows.Forms.Label client_Label;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.LinkLabel beginining_Message;
-        private System.Windows.Forms.Label name_Label;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Label name_Label_2;
-        private System.Windows.Forms.LinkLabel beginining_Message_2;
+        private System.Windows.Forms.Label friend_name_Label;
         private System.Windows.Forms.Label status;
         private System.Windows.Forms.Button logout_btn;
         private System.Windows.Forms.Button btn_friend_list;
