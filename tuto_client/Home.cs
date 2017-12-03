@@ -16,10 +16,10 @@ namespace tuto_client
     public partial class Home : Form
     {
         private string _name;
-        public string Name
+        public string username
         {
             get { return _name; }
-            set { _name = Name; }
+            set { _name = username; }
         }
 
         public event EventHandler<New_tchat_event> Tchat_update;
@@ -35,6 +35,7 @@ namespace tuto_client
             _name = name;
             InitializeComponent();
             Change_log_status("Connected");
+            client_Label.Text = _name;
             set_static_Friend_name();
         }
         
@@ -51,14 +52,14 @@ namespace tuto_client
 
         private void set_static_Friend_name ()
         {
-            if (Name == "Dan") friend_name_Label.Text = "Nico";
-            if (Name == "Nico") friend_name_Label.Text = "Dan";
+            if (_name == "Dan")  friend_name_Label.Text = "Nico";
+            if (_name == "Nico") friend_name_Label.Text = "Dan";
         }
 
         private void Beginining_Message_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (Name == "Dan") Tchat_update(this, new New_tchat_event("Nico"));
-            if (Name == "Nico") Tchat_update(this, new New_tchat_event("Dan"));
+            if (_name == "Dan") Tchat_update(this, new New_tchat_event("Nico"));
+            if (_name == "Nico") Tchat_update(this, new New_tchat_event("Dan"));
             //static for now
         }
         

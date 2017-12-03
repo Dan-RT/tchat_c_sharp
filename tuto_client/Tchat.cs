@@ -7,10 +7,10 @@ namespace tuto_client
     public partial class Tchat : Form
     {
         private string _name;
-        public string Name
+        public string username
         {
             get { return _name; }
-            set { _name = Name; }
+            set { _name = username; }
         }
 
         private string _friendName;
@@ -31,7 +31,7 @@ namespace tuto_client
             _name = name;
             _friendName = friend;
             InitializeComponent();
-            cLient_Label.Text = "You : " + _name;
+            client_Label.Text = "You : " + _name;
             friend_label.Text = _friendName;
         }
 
@@ -48,6 +48,7 @@ namespace tuto_client
         {
             if (sent)
             {
+                Update_message_feed("You : " + Text_Send.Text);
                 Text_Send.Text = "";
             } else {
                 MessageBox.Show("Message non envoyé, veuillez vous reconnecter.");

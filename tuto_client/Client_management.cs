@@ -182,7 +182,7 @@ namespace tuto_client
             if (Search_Name_Tchat(p.Data) == null)
                 //si le Tchat n'existe pas déjà, on évite de l'ouvrir deux fois
             {
-                Tchat new_tchat = new Tchat(p.Data, this._username);
+                Tchat new_tchat = new Tchat(this._username, p.Data);
                 new_tchat.Send_update += Send_Message;
                 tchat_Liste.Add(new_tchat);
                 
