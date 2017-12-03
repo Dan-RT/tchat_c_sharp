@@ -117,9 +117,7 @@ namespace tuto_client
         private void Send_Message (object sender, Send_btn_event pe)
         {
             Tchat tchat = sender as Tchat;
-            string receiver = "Michel"; /// probleme ici
-            string message = "@" + this._username + "#message" + "@" + receiver + "#" + pe.Message;
-            tchat.Message_sent(Net.ClientSend(client, message));
+            tchat.Message_sent(Net.ClientSend(client, pe.Message));
         }
 
         public void handling_message (string data)
@@ -203,7 +201,6 @@ namespace tuto_client
             if (tchat == null)
             //si le Tchat n'existe pas déjà, on le crée
             {
-                MessageBox.Show("New tchat");
                 tchat = new Tchat(this._username, sender);
                 tchat.Send_update += Send_Message;
                 tchat_Liste.Add(tchat);

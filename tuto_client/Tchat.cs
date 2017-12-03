@@ -40,6 +40,7 @@ namespace tuto_client
             string message = Text_Send.Text;
             if (message != "")
             {
+                message = "@" + this._name + "#message" + "@" + this._friendName + "#" + message;
                 Send_update(this, new Send_btn_event(message));
             }
         }

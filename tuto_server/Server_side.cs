@@ -122,10 +122,11 @@ namespace tuto_server
 
                 foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
                 {
-                    System.Console.WriteLine("teeeest1");
-                    if (name != client_tmp.Key)
+                    System.Console.WriteLine("receiver : " + receiver);
+                    //if (name != client_tmp.Key)
+                    if (receiver == client_tmp.Key)
                     {
-                        System.Console.WriteLine("teeeeest2");
+                        System.Console.WriteLine("forwarded to : " + client_tmp.Key);
                         message = data_string;
                         Net.ServerSend(client_tmp.Value, message);
                     }
