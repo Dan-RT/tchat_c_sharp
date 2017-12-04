@@ -28,7 +28,10 @@ namespace tuto_client
         public event EventHandler<Log_btn_event> Log_update;
         public delegate void DelegateRaisingEvent_Bool(bool log);
 
-        private List<Label> friend_list = new List<Label>();
+        delegate void Generate_friend_list_Callback_safe(List<String> friend_list);
+
+        private List<Label> label_list = new List<Label>();
+        //private List<String> friend_list = new List<String>();
 
         public Home(string name)
         {
@@ -37,6 +40,7 @@ namespace tuto_client
             Change_log_status("Connected");
             client_Label.Text = _name;
             set_static_Friend_name();
+            //Generate_friend_list();
         }
         
         public void Change_log_status (string data)
@@ -71,38 +75,60 @@ namespace tuto_client
 
         /*  La suite est à contruire.  */
 
-        public void Generate_friend_list()
+        public void Generate_friend_list(List<String> friend_list)
         {
-            /*foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+            if (this.InvokeRequired)
             {
-                Label label_tmp = new Label();
-                label_tmp.Text = client_tmp.Key;
-                this.Controls.Add(label_tmp);
-                friend_list.Add(label_tmp);
-            }*/
-            int j = 0;
-            for (int i = 0; i < 3; i++)
+                Generate_friend_list_Callback_safe d = new Generate_friend_list_Callback_safe(Generate_friend_list);
+                this.Invoke(d, new object[] { friend_list });
+            }
+            else
             {
-                j = j + 15;
-
-                Label label_tmp = new Label
+                foreach (Label label_tmp in label_list)
                 {
-                    AutoSize = true,
-                    Location = new System.Drawing.Point(259, 337 + j),
-                    Name = "Label" + "test" + i,
-                    Size = new System.Drawing.Size(107, 43),
-                    TabIndex = 0,
-                    Text = "test" + i
-                };
+                    this.Controls.Remove(label_tmp);
+                }
+                label_list.Clear();
 
-                this.Controls.Add(label_tmp);
-                friend_list.Add(label_tmp);
+                foreach (String friend in friend_list)
+                {
+                    Label label_tmp = new Label();
+                    label_tmp.Text = friend;
+
+                    const int labelWidth = 200;  // control variables for TextBox placement
+                    const int labelHeight = 25;
+                    const int labelMargin = 4;
+
+                    if (label_list.Count == 0)
+                    {
+                        label_tmp.Top = 186 + labelMargin;
+                    }
+                    else
+                    {
+                        label_tmp.Top = 186 + ((labelHeight + labelMargin) * label_list.Count) + labelMargin;
+                        //label_tmp.Location = new System.Drawing.Point(186 + ((labelHeight + labelMargin) * label_list.Count) + labelMargin;, 252);
+                    }
+
+                    //label_tmp.Location = new System.Drawing.Point(186 + 29, 252);
+
+                    label_tmp.Left = labelMargin;
+                    label_tmp.Height = labelHeight;
+                    label_tmp.Width = labelWidth;
+                    //tb.Text = "Test" + list_label.Count;
+                    //label_tmp.Text = "Height : " + this.Size.Height + "    Width : " + this.Size.Width;
+                    //this.Height = this.Height - 29;
+                    //this.Size = new System.Drawing.Size(this.Size.Height-10, this.Size.Width);
+                    label_list.Add(label_tmp);
+                    this.Controls.Add(label_tmp);
+
+                    //friend_list.Add(label_tmp);
+                }
             }
         }
 
-        private void Btn_friend_list_Click(object sender, EventArgs e)
+        private void Label_test_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Generate_friend_list();
+            
         }
     }
 }

@@ -153,6 +153,7 @@ namespace tuto_client
                             //System.Console.WriteLine(words[i]);
                             people_connected.Add(words[i]);
                         }
+                        if (client_home != null) client_home.Generate_friend_list(people_connected);
                     } else
                     {
                         string message = words[3];

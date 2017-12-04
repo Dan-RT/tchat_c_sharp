@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace tuto_client
 {
@@ -27,6 +28,9 @@ namespace tuto_client
         public static void Display_thread_start_2()
         {
             Console.WriteLine("Thread starting.");
+            /*Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());*/
             new Client_management("127.0.0.2");
         }
     }

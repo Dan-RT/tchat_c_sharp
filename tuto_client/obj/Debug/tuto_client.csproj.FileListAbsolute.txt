@@ -50,3 +50,4 @@ C:\Users\N-Sailly-Fixe\Source\Repos\tchat_c_sharp\tuto_client\obj\Debug\tuto_cli
 \\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.csproj.CoreCompileInputs.cache
 \\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.exe
 \\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.pdb
+\\psf\Home\Google Drive\M1\Semestre 7\C#\Projet\Projet\Messenger\tchat_c_sharp\tuto_client\obj\Debug\tuto_client.Form1.resources

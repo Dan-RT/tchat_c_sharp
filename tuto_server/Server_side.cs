@@ -139,7 +139,7 @@ namespace tuto_server
             if (this.txtLog.InvokeRequired)
             {
                 SetTextCallback_safe d = new SetTextCallback_safe(Change_text);
-                this.Invoke(d, new object[] { "", data });
+                this.Invoke(d, new object[] { data });
             }
             else
             {
