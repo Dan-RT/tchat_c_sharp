@@ -27,6 +27,7 @@ namespace tuto_server
             if (!server_on)
             {
                 Start_listening();
+                Update_list_client();
             }
             else
             {
@@ -61,7 +62,6 @@ namespace tuto_server
                         if (client.Connected) // If you are connected
                         {
                             Net.ServerReceive(client, this); //Start Receiving
-                            Update_list_client();
                         }
                     } catch
                     {
@@ -111,9 +111,9 @@ namespace tuto_server
             System.Console.WriteLine(type_message);
             if (type_message.Equals("connection", StringComparison.OrdinalIgnoreCase)) {
                 //connection
+                Thread.Sleep(700);  //Permet d'être sûr qu'en parallèle les données ont été supprimé en cas de reconnection en très peu de temps
                 Change_text("Status : " + name + " connected.");
                 listConnectedClients.Add(name, client);
-
             } else if (type_message == "message") {
                 //normal message
                 string receiver = words[2];
@@ -134,7 +134,7 @@ namespace tuto_server
             }
         }
 
-        private void Change_text(string data)
+        public void Change_text(string data)
         {
             if (this.txtLog.InvokeRequired)
             {
@@ -166,36 +166,33 @@ namespace tuto_server
             {
                 while (server_on)
                 {
-                    //Console.WriteLine("Clients connected : ");
-
-                    foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+                    lock(this)
                     {
-                        if (client_tmp.Value.Connected)
+                        //Console.WriteLine("Clients connected : ");
+                        foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
                         {
-                           //Console.WriteLine(client_tmp.Key + " is connected.");
+                            if (client_tmp.Value.Connected)
+                            {
+                                //Console.WriteLine(client_tmp.Key + " is connected.");
+                            }
+                            else
+                            {
+                                Console.WriteLine(client_tmp.Key + " is gone :( ");
+                                listConnectedClients.Remove(client_tmp.Key);
+                                Change_text("Status : " + client_tmp.Key + " is gone.");
+                                break;
+                            }
                         }
-                        else
-                        {
-                            Console.WriteLine(client_tmp.Key + " is gone :( ");
-                            listConnectedClients.Remove(client_tmp.Key);
-                            Change_text("Status : " + client_tmp.Key + " is gone.");
-
-                            //Console.WriteLine("Actualisation de la liste en cours...");
-                            break;
-                        }
-                        //data = data + "\n" + client_tmp.Key;      //marche pas 
+                        //Console.WriteLine("Fin clients connected : ");
+                        //text_clients_connected.Text = data;
+                        Net.ServerBroadcast(this, listConnectedClients, listConnectedClients_parser());
                     }
-                    //Console.WriteLine("Fin clients connected : ");
-                    //text_clients_connected.Text = data;
-
-                    Net.ServerBroadcast(this, listConnectedClients, listConnectedClients_parser());
-
-                    Thread.Sleep(5000);
+                    Thread.Sleep(500);
                 }
             }).Start(); // Start the Thread
         }
-
-        public string listConnectedClients_parser()
+        
+        public String listConnectedClients_parser()
         {
             string list = "@server#List_clients";
             foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
@@ -205,8 +202,21 @@ namespace tuto_server
                     list += "@" + client_tmp.Key;
                 }
             }
-            //Console.WriteLine(list);
             return list;
+        }
+
+        public void remove_item_listConnectedClients(String name)
+        {
+            foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+            {
+                if (client_tmp.Key == name)
+                {
+                    Console.WriteLine(client_tmp.Key + " is gone :( ");
+                    listConnectedClients.Remove(client_tmp.Key);
+                    Change_text("Status : " + client_tmp.Key + " is gone.");
+                    break;
+                }
+            }
         }
     }
 }

@@ -34,7 +34,6 @@
             this.beginining_Message = new System.Windows.Forms.LinkLabel();
             this.status = new System.Windows.Forms.Label();
             this.logout_btn = new System.Windows.Forms.Button();
-            this.Label_test = new System.Windows.Forms.LinkLabel();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -102,25 +101,11 @@
             this.logout_btn.UseVisualStyleBackColor = true;
             this.logout_btn.Click += new System.EventHandler(this.Logout_btn_Click);
             // 
-            // Label_test
-            // 
-            this.Label_test.AutoSize = true;
-            this.Label_test.LinkColor = System.Drawing.Color.Black;
-            this.Label_test.Location = new System.Drawing.Point(186, 252);
-            this.Label_test.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Label_test.Name = "Label_test";
-            this.Label_test.Size = new System.Drawing.Size(283, 20);
-            this.Label_test.TabIndex = 7;
-            this.Label_test.TabStop = true;
-            this.Label_test.Text = "New Message : \"Hey buddy it\'s been...\"";
-            this.Label_test.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Label_test_LinkClicked);
-            // 
             // Home
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(654, 525);
-            this.Controls.Add(this.Label_test);
             this.Controls.Add(this.logout_btn);
             this.Controls.Add(this.status);
             this.Controls.Add(this.panel1);
@@ -143,6 +128,5 @@
         private System.Windows.Forms.Label friend_name_Label;
         private System.Windows.Forms.Label status;
         private System.Windows.Forms.Button logout_btn;
-        private System.Windows.Forms.LinkLabel Label_test;
     }
 }

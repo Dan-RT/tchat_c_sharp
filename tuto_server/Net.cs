@@ -55,12 +55,15 @@ namespace tuto_server
                 }
             }).Start(); // Start the Thread
         }
-
-
+        
         public static void ServerBroadcast(Server_side server, Dictionary<String, TcpClient> listConnectedClients, string msg)
         {
-            lock (server) {
-                foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+            //Console.WriteLine("Net ServerBroadcast :");
+            foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+            {
+                //Console.WriteLine(client_tmp.Key);
+                //Une connexion peut être interrompue entre le temps que le code capte la déco et qu'elle envoie la liste précédente
+                if (client_tmp.Value.Connected == true)
                 {
                     try
                     {
@@ -75,8 +78,11 @@ namespace tuto_server
                     }
                     catch (System.IO.IOException ex)
                     {
-                        Console.WriteLine(ex);
+                        MessageBox.Show(ex.ToString());
                     }
+                } else
+                {
+                    server.remove_item_listConnectedClients(client_tmp.Key);
                 }
             }
         }

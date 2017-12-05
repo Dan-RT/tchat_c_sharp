@@ -30,7 +30,7 @@ namespace tuto_client
 
         delegate void Generate_friend_list_Callback_safe(List<String> friend_list);
 
-        private List<Label> label_list = new List<Label>();
+        private List<LinkLabel> label_list = new List<LinkLabel>();
         //private List<String> friend_list = new List<String>();
 
         public Home(string name)
@@ -92,43 +92,44 @@ namespace tuto_client
 
                 foreach (String friend in friend_list)
                 {
-                    Label label_tmp = new Label();
-                    label_tmp.Text = friend;
-
-                    const int labelWidth = 200;  // control variables for TextBox placement
-                    const int labelHeight = 25;
-                    const int labelMargin = 4;
-
-                    if (label_list.Count == 0)
+                    if (friend != _name)
                     {
-                        label_tmp.Top = 186 + labelMargin;
+                        LinkLabel label_tmp = new LinkLabel();
+                        label_tmp.Text = friend;
+                        label_tmp.Links[0].LinkData = friend;
+                        label_tmp.LinkColor = System.Drawing.Color.Black;
+
+                        const int labelWidth = 200;  // control variables for TextBox placement
+                        const int labelHeight = 25;
+                        const int labelMargin = 4;
+
+                        if (label_list.Count == 0)
+                        {
+                            label_tmp.Top = 186 + labelMargin;
+                        }
+                        else
+                        {
+                            label_tmp.Top = 186 + ((labelHeight + labelMargin) * label_list.Count) + labelMargin;
+                        }
+                        
+
+                        label_tmp.Left = 252;
+                        label_tmp.Width = labelWidth;
+
+                        label_tmp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Label_LinkClicked);
+
+                        label_list.Add(label_tmp);
+                        this.Controls.Add(label_tmp);
                     }
-                    else
-                    {
-                        label_tmp.Top = 186 + ((labelHeight + labelMargin) * label_list.Count) + labelMargin;
-                        //label_tmp.Location = new System.Drawing.Point(186 + ((labelHeight + labelMargin) * label_list.Count) + labelMargin;, 252);
-                    }
-
-                    //label_tmp.Location = new System.Drawing.Point(186 + 29, 252);
-
-                    label_tmp.Left = labelMargin;
-                    label_tmp.Height = labelHeight;
-                    label_tmp.Width = labelWidth;
-                    //tb.Text = "Test" + list_label.Count;
-                    //label_tmp.Text = "Height : " + this.Size.Height + "    Width : " + this.Size.Width;
-                    //this.Height = this.Height - 29;
-                    //this.Size = new System.Drawing.Size(this.Size.Height-10, this.Size.Width);
-                    label_list.Add(label_tmp);
-                    this.Controls.Add(label_tmp);
-
-                    //friend_list.Add(label_tmp);
                 }
             }
         }
 
-        private void Label_test_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void Label_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            
+            String target = e.Link.LinkData as String;
+            Tchat_update(this, new New_tchat_event(target));
         }
     }
+    
 }

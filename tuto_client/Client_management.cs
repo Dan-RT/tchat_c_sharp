@@ -128,14 +128,7 @@ namespace tuto_client
             } else {
                 char[] delimiterChars = { '@', '#' };
                 string[] words = data.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries);
-
-                for (var i = 0; i < words.Length; i++)
-                {
-                    //System.Console.WriteLine(words[i]);
-                }
-
-                //pour bien implementer cette fonction on a besoin de la l
-
+                
                 //words[0] --> pseudo du mec qui envoie
                 //words[1] --> type du message
                 //words[2] --> optionnel : pseudo du receveur
@@ -148,12 +141,17 @@ namespace tuto_client
                     if (type_message == "List_clients")
                     {
                         people_connected.Clear();
-                        for (var i = 2; i < words.Length; i++)
+                        lock(this)
                         {
-                            //System.Console.WriteLine(words[i]);
-                            people_connected.Add(words[i]);
+                            Console.WriteLine("Clients connected : ");
+                            for (var i = 2; i < words.Length; i++)
+                            {
+                                System.Console.WriteLine(words[i]);
+                                people_connected.Add(words[i]);
+                            }
+                            if (client_home != null) client_home.Generate_friend_list(people_connected);
+                            Console.WriteLine("End clients connected : ");
                         }
-                        if (client_home != null) client_home.Generate_friend_list(people_connected);
                     } else
                     {
                         string message = words[3];
