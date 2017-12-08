@@ -54,8 +54,9 @@ namespace tuto_client
             Application.Run(client_home);
         }
         
-        public void Loss_connection()
+        public void Close_connection()
         {
+            Net.ClientSend(client, "@"+ _username + "#disconnection" + "@" + IP);
             client.GetStream().Close();
             client.Close();
             login = new Thread(new ThreadStart(Login_start));
@@ -71,7 +72,7 @@ namespace tuto_client
             } else
             {
                 //logout
-                Loss_connection();
+                Close_connection();
             }
         }
         
@@ -84,7 +85,7 @@ namespace tuto_client
 
                 if (client.Connected/* && Net.Client_Connection(this.client)*/) { //Starts Receiving if Connected
 
-                    Net.ClientSend(this.client, "@" + username + "#" + "connection");
+                    Net.ClientSend(this.client, "@" + username + "#" + "connection" + "@" + this.IP);
                     Net.ClientReceive(this, this.client);
                     //Net.ClientReceive(this, this.client, new_tchat);
                     client_login.RequestStop();

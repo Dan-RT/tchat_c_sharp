@@ -62,7 +62,7 @@ namespace tuto_client
                         if (data_string == "server_close")
                         {
                             MessageBox.Show("La connection avec le serveur a été perdue.");
-                            client_side.Loss_connection();
+                            client_side.Close_connection();
                             break;
                         }
                         else

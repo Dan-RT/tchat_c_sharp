@@ -5,18 +5,20 @@ using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Net.NetworkInformation;
 
 namespace tuto_server
 {
     public partial class Server_side : Form
     {
         private TcpListener server = new TcpListener(IPAddress.Any, 1980); // Creates a TCP Listener To Listen to Any IPAddress trying to connect to the program with port 1980
-        private TcpClient client; // Creates a TCP Client
-        private Dictionary<String, TcpClient> listConnectedClients = new Dictionary<String, TcpClient>();
+        //private TcpClient client; // Creates a TCP Client
+        private Dictionary<TcpClient, Infos_client> listConnectedClients = new Dictionary<TcpClient, Infos_client>();
         private bool server_on = false;
         private delegate void SetTextCallback_safe(string data);
         private delegate void SetTextCallback_listen(string data);
-        
+        private Object thisLock = new Object();
+
         public Server_side()
         {
             InitializeComponent();
@@ -32,7 +34,8 @@ namespace tuto_server
             else
             {
                 try {
-                    Net.ServerSend(client, "server_close");
+                    Net.ServerBroadcast(this, listConnectedClients, "server_close");
+                    //Net.ServerSend(client, "server_close");
                     //on notifie le client que le server ferme
                 } catch (Exception ex)
                 {
@@ -56,7 +59,9 @@ namespace tuto_server
                 {
                     try
                     {
-                        client = server.AcceptTcpClient(); //Waits for the Client To Connect
+                        TcpClient client = server.AcceptTcpClient(); //Waits for the Client To Connect
+                        Infos_client infos = new Infos_client() { Name = "", IP = "" };
+                        listConnectedClients.Add(new TcpClient(), infos);
                         Net.ServerSend(client, "client_connected");
                         Console.WriteLine("Connected To Client");
                         if (client.Connected) // If you are connected
@@ -78,20 +83,16 @@ namespace tuto_server
         {
             try
             {
-                if (client.Connected && txtSend.Text != "") // if the client is connected
-                {
-                    Net.ServerSend(client, txtSend.Text); // uses the Function ClientSend and the msg as txtSend.Text
-                    txtSend.Clear();
-                }
+                Net.ServerBroadcast(this, listConnectedClients, txtSend.Text);
+                txtSend.Clear();
             } catch
             {
-                MessageBox.Show("Cannot receive data, client not connected.");
+                MessageBox.Show("Cannot receive data, no client connected.");
             }
         }
 
-        public void Message_handling(byte[] data)
+        public void Message_handling(byte[] data, TcpClient client)
         {
-
             string data_string = Encoding.Default.GetString(data);
             Console.WriteLine(data_string);
             char[] delimiterChars = { '@', '#'};
@@ -105,30 +106,41 @@ namespace tuto_server
             //words[1] --> type du message
             //words[2] --> optionnel : pseudo du receveur
             //words[3] --> optionnel : message pour le receveur
-
-            string name = words[0];
+            
             string type_message = words[1];
+            Infos_client infos = new Infos_client() { Name = words[0], IP = words[2] };
+            infos.Name = words[0];
+            infos.IP = words[2];
             System.Console.WriteLine(type_message);
+
             if (type_message.Equals("connection", StringComparison.OrdinalIgnoreCase)) {
+                
                 //connection
-                Thread.Sleep(700);  //Permet d'être sûr qu'en parallèle les données ont été supprimé en cas de reconnection en très peu de temps
-                Change_text("Status : " + name + " connected.");
-                listConnectedClients.Add(name, client);
+                Change_text("Status : " + infos.Name + " connected.");
+                //listConnectedClients.Add(infos, new TcpClient());
+
+            } else if (type_message.Equals("disconnection", StringComparison.OrdinalIgnoreCase)) {
+               
+                //disconnection
+                Console.WriteLine(infos.Name + " is gone :( ");
+                listConnectedClients.Remove(client);
+
             } else if (type_message == "message") {
+
                 //normal message
                 string receiver = words[2];
                 string message = words[3];
-                Change_text(name + " to " + receiver + " : " + message);
+                Change_text(infos.Name + " to " + receiver + " : " + message);
 
-                foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+                foreach (KeyValuePair<TcpClient, Infos_client> client_tmp in listConnectedClients)
                 {
                     System.Console.WriteLine("receiver : " + receiver);
                     //if (name != client_tmp.Key)
-                    if (receiver == client_tmp.Key)
+                    if (receiver == client_tmp.Value.Name)
                     {
                         System.Console.WriteLine("forwarded to : " + client_tmp.Key);
                         message = data_string;
-                        Net.ServerSend(client_tmp.Value, message);
+                        Net.ServerSend(client_tmp.Key, message);
                     }
                 }
             }
@@ -166,57 +178,93 @@ namespace tuto_server
             {
                 while (server_on)
                 {
-                    lock(this)
+                    //Console.WriteLine("Clients connected : ");
+                    lock(thisLock)
                     {
-                        //Console.WriteLine("Clients connected : ");
-                        foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+                        foreach (KeyValuePair<TcpClient, Infos_client> client_tmp in listConnectedClients)
                         {
-                            if (client_tmp.Value.Connected)
+                            Ping pingSender = new Ping();
+                            IPAddress address = IPAddress.Parse(client_tmp.Value.IP);
+                            PingReply reply = pingSender.Send(address);
+
+                            if (reply.Status == IPStatus.Success)
                             {
-                                //Console.WriteLine(client_tmp.Key + " is connected.");
+                                /*Console.WriteLine("Address: {0}", reply.Address.ToString());
+                                Console.WriteLine("RoundTrip time: {0}", reply.RoundtripTime);
+                                Console.WriteLine("Time to live: {0}", reply.Options.Ttl);
+                                Console.WriteLine("Don't fragment: {0}", reply.Options.DontFragment);
+                                Console.WriteLine("Buffer size: {0}", reply.Buffer.Length);*/
                             }
                             else
                             {
-                                Console.WriteLine(client_tmp.Key + " is gone :( ");
+                                /*Console.WriteLine(reply.Status);
+                                Console.WriteLine(client_tmp.Key.Name + " is gone :( ");*/
                                 listConnectedClients.Remove(client_tmp.Key);
+                                display_listConnectedClients();
                                 Change_text("Status : " + client_tmp.Key + " is gone.");
                                 break;
                             }
                         }
-                        //Console.WriteLine("Fin clients connected : ");
-                        //text_clients_connected.Text = data;
-                        Net.ServerBroadcast(this, listConnectedClients, listConnectedClients_parser());
                     }
-                    Thread.Sleep(500);
+                    //Console.WriteLine("Fin clients connected : ");
+                    //text_clients_connected.Text = data;
+                    //Net.ServerBroadcast(this, listConnectedClients, listConnectedClients_parser());
+                    Thread.Sleep(5000);
                 }
             }).Start(); // Start the Thread
         }
-        
+
+        public void ModifyListConnectedClients(Infos_client infos, TcpClient client)
+        {
+            foreach (KeyValuePair<TcpClient, Infos_client> client_tmp in listConnectedClients)
+            {
+                if(client_tmp.Key == client)
+                {
+                    client_tmp.Value = infos;
+                }
+            }
+        }
+
+
         public String listConnectedClients_parser()
         {
             string list = "@server#List_clients";
-            foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+            foreach (KeyValuePair<TcpClient, Infos_client> client_tmp in listConnectedClients)
             {
-                if (client_tmp.Value.Connected) //you never know ahah
-                {
-                    list += "@" + client_tmp.Key;
-                }
+                list += "@" + client_tmp.Value.Name;
             }
             return list;
         }
 
         public void remove_item_listConnectedClients(String name)
         {
-            foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+            foreach (KeyValuePair<TcpClient, Infos_client> client_tmp in listConnectedClients)
             {
-                if (client_tmp.Key == name)
+                if (client_tmp.Value.Name == name)
                 {
-                    Console.WriteLine(client_tmp.Key + " is gone :( ");
+                    //Console.WriteLine(client_tmp.Key.Name + " is gone :( ");
                     listConnectedClients.Remove(client_tmp.Key);
-                    Change_text("Status : " + client_tmp.Key + " is gone.");
+                    Change_text("Status : " + client_tmp.Value.Name + " is gone.");
                     break;
                 }
             }
         }
+
+        public void display_listConnectedClients ()
+        {
+            Console.WriteLine("Début recap clients.");
+            foreach (KeyValuePair<TcpClient, Infos_client> client_tmp in listConnectedClients)
+            {
+                Console.WriteLine("Name : " + client_tmp.Value.Name);
+                Console.WriteLine("IP : " + client_tmp.Value.IP);
+            }
+            Console.WriteLine("Fin recap clients.");
+        }
+    }
+
+    public struct Infos_client
+    {
+        public string Name { get; set; }
+        public string IP { get; set; }
     }
 }

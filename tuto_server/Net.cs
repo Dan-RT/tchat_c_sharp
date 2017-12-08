@@ -47,7 +47,7 @@ namespace tuto_server
                         stream.Read(data, 0, data.Length); //Receives The Real Data not the Size
                         server_obj.Invoke((MethodInvoker)delegate // To Write the Received data
                         {
-                            server_obj.Message_handling(data);
+                            server_obj.Message_handling(data, client);
                         });
                     }
                 } catch {
@@ -56,35 +56,39 @@ namespace tuto_server
             }).Start(); // Start the Thread
         }
         
-        public static void ServerBroadcast(Server_side server, Dictionary<String, TcpClient> listConnectedClients, string msg)
+        public static void ServerBroadcast(Server_side server, Dictionary<TcpClient, Infos_client> listConnectedClients, string msg)
         {
             //Console.WriteLine("Net ServerBroadcast :");
-            foreach (KeyValuePair<string, TcpClient> client_tmp in listConnectedClients)
+            //lock enlevé
+
+            lock(server)
             {
-                //Console.WriteLine(client_tmp.Key);
-                //Une connexion peut être interrompue entre le temps que le code capte la déco et qu'elle envoie la liste précédente
-                if (client_tmp.Value.Connected == true)
+                foreach (KeyValuePair<TcpClient, Infos_client> client_tmp in listConnectedClients)
                 {
-                    try
+                    //Console.WriteLine(client_tmp.Key);
+                    //Une connexion peut être interrompue entre le temps que le code capte la déco et qu'elle envoie la liste précédente
+                    
+                    if (client_tmp.Key.Connected == true)
                     {
-                        NetworkStream stream = client_tmp.Value.GetStream();
-                        byte[] data;
-                        data = Encoding.Default.GetBytes(msg);
-                        int length = data.Length;
-                        byte[] datalength = new byte[4];
-                        datalength = BitConverter.GetBytes(length);
-                        stream.Write(datalength, 0, 4);
-                        stream.Write(data, 0, data.Length);
+                        NetworkStream stream = client_tmp.Key.GetStream();
+                        try
+                        {
+                            byte[] data;
+                            data = Encoding.Default.GetBytes(msg);
+                            int length = data.Length;
+                            byte[] datalength = new byte[4];
+                            datalength = BitConverter.GetBytes(length);
+                            stream.Write(datalength, 0, 4);
+                            stream.Write(data, 0, data.Length);
+                        }
+                        catch (System.IO.IOException ex)
+                        {
+                            MessageBox.Show(ex.ToString());
+                        }
                     }
-                    catch (System.IO.IOException ex)
-                    {
-                        MessageBox.Show(ex.ToString());
-                    }
-                } else
-                {
-                    server.remove_item_listConnectedClients(client_tmp.Key);
                 }
             }
         }
+        
     }
 }
