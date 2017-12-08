@@ -56,21 +56,21 @@ namespace tuto_server
             }).Start(); // Start the Thread
         }
         
-        public static void ServerBroadcast(Server_side server, Dictionary<TcpClient, Infos_client> listConnectedClients, string msg)
+        public static void ServerBroadcast(Server_side server, List<Client> listConnectedClients, string msg)
         {
             //Console.WriteLine("Net ServerBroadcast :");
             //lock enlevé
 
             lock(server)
             {
-                foreach (KeyValuePair<TcpClient, Infos_client> client_tmp in listConnectedClients)
+                for (int i = 0; i < listConnectedClients.Count; i++)
                 {
                     //Console.WriteLine(client_tmp.Key);
                     //Une connexion peut être interrompue entre le temps que le code capte la déco et qu'elle envoie la liste précédente
                     
-                    if (client_tmp.Key.Connected == true)
+                    if (listConnectedClients[i].tcp_client.Connected == true)
                     {
-                        NetworkStream stream = client_tmp.Key.GetStream();
+                        NetworkStream stream = listConnectedClients[i].tcp_client.GetStream();
                         try
                         {
                             byte[] data;
