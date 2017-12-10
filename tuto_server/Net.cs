@@ -13,7 +13,7 @@ namespace tuto_server
     {
         public static void ServerSend (TcpClient client, string msg)
         {
-            System.Console.WriteLine("serverSend called");
+            //System.Console.WriteLine("serverSend called");
             try
             {
                 NetworkStream stream = client.GetStream(); //Gets The Stream of The Connection
@@ -34,7 +34,7 @@ namespace tuto_server
         { 
             int i;
             byte[] datalength = new byte[4]; // creates a new byte with length 4 ( used for receivng data's lenght)
-            System.Console.WriteLine("serverReceive called");
+            //System.Console.WriteLine("serverReceive called");
             NetworkStream stream = client.GetStream(); //Gets The Stream of The Connection
             new Thread(() => // Thread (like Timer)
             {
@@ -56,21 +56,21 @@ namespace tuto_server
             }).Start(); // Start the Thread
         }
         
-        public static void ServerBroadcast(Server_side server, Dictionary<TcpClient, Infos_client> listConnectedClients, string msg)
+        public static void ServerBroadcast(Server_side server, List<Client> listConnectedClients, string msg)
         {
             //Console.WriteLine("Net ServerBroadcast :");
             //lock enlevé
 
             lock(server)
             {
-                foreach (KeyValuePair<TcpClient, Infos_client> client_tmp in listConnectedClients)
+                for (int i = 0; i < listConnectedClients.Count; i++)
                 {
                     //Console.WriteLine(client_tmp.Key);
                     //Une connexion peut être interrompue entre le temps que le code capte la déco et qu'elle envoie la liste précédente
                     
-                    if (client_tmp.Key.Connected == true)
+                    if (listConnectedClients[i].tcp_client.Connected == true)
                     {
-                        NetworkStream stream = client_tmp.Key.GetStream();
+                        NetworkStream stream = listConnectedClients[i].tcp_client.GetStream();
                         try
                         {
                             byte[] data;

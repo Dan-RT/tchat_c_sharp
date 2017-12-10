@@ -86,14 +86,17 @@ namespace tuto_client
             {
                 foreach (Label label_tmp in label_list)
                 {
+                    Console.WriteLine("\n\nRemoving friend list"); 
                     this.Controls.Remove(label_tmp);
                 }
                 label_list.Clear();
 
                 foreach (String friend in friend_list)
                 {
+                    Console.WriteLine("\nCreating friend list");
                     if (friend != _name)
                     {
+                        Console.WriteLine("\nCreating " + friend + " item");
                         LinkLabel label_tmp = new LinkLabel();
                         label_tmp.Text = friend;
                         label_tmp.Links[0].LinkData = friend;
