@@ -24,6 +24,7 @@ namespace tuto_server
         public Server_side()
         {
             InitializeComponent();
+            Btn_listen_Click(this, null);
         }
         
         private void Btn_listen_Click(object sender, EventArgs e)
@@ -119,15 +120,16 @@ namespace tuto_server
             if (type_message.Equals("connection", StringComparison.OrdinalIgnoreCase)) {
                 
                 //connection
-                Change_text("Status : " + Name + " connected.");
+                Change_text("Status : " + client_tmp.Name + " connected.");
                 ModifyListConnectedClients(client_tmp);
 
             } else if (type_message.Equals("disconnection", StringComparison.OrdinalIgnoreCase)) {
                
                 //disconnection
-                Console.WriteLine(Name + " is gone :( ");
+                Console.WriteLine(client_tmp.Name + " is gone :( ");
                 //listConnectedClients.Remove(client);
                 remove_item_listConnectedClients(client_tmp);
+                Change_text("Status : " + client_tmp.Name + " is gone.");
 
             } else if (type_message == "message") {
 
@@ -175,12 +177,12 @@ namespace tuto_server
                 btn_listen.Text = data;
             }
         }
-
         
         public void Update_list_client()
         {
             new Thread(() =>
             {
+                this.Name = "update_thread";
                 while (server_on)
                 {
                     //Console.WriteLine("Clients connected : ");
@@ -211,6 +213,7 @@ namespace tuto_server
                             }
                         }
                     }
+                    display_listConnectedClients();
                     //Console.WriteLine("Fin clients connected : ");
                     //text_clients_connected.Text = data;
                     Net.ServerBroadcast(this, listConnectedClients, listConnectedClients_parser());
@@ -267,19 +270,25 @@ namespace tuto_server
 
             if (flag)
             {
+                Console.WriteLine("Removing " + listConnectedClients[index].Name);
+                listConnectedClients[index].tcp_client.Close();
                 listConnectedClients.RemoveAt(index);
             }
         }
 
         public void display_listConnectedClients ()
         {
-            Console.WriteLine("Début recap clients.");
-            for (int i = 0; i < listConnectedClients.Count; i++)
+            lock(this)
             {
-                Console.WriteLine("Name : " + listConnectedClients[i].Name);
-                Console.WriteLine("IP : " + listConnectedClients[i].IP);
+                Console.WriteLine("\n\nDébut recap clients.");
+                for (int i = 0; i < listConnectedClients.Count; i++)
+                {
+                    Console.WriteLine("Name : " + listConnectedClients[i].Name);
+                    Console.WriteLine("IP : " + listConnectedClients[i].IP);
+                    Console.WriteLine("Client : " + listConnectedClients[i].tcp_client);
+                }
+                Console.WriteLine("Fin recap clients.\n\n");
             }
-            Console.WriteLine("Fin recap clients.");
         }
     }
 

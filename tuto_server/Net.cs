@@ -13,7 +13,7 @@ namespace tuto_server
     {
         public static void ServerSend (TcpClient client, string msg)
         {
-            System.Console.WriteLine("serverSend called");
+            //System.Console.WriteLine("serverSend called");
             try
             {
                 NetworkStream stream = client.GetStream(); //Gets The Stream of The Connection
@@ -34,7 +34,7 @@ namespace tuto_server
         { 
             int i;
             byte[] datalength = new byte[4]; // creates a new byte with length 4 ( used for receivng data's lenght)
-            System.Console.WriteLine("serverReceive called");
+            //System.Console.WriteLine("serverReceive called");
             NetworkStream stream = client.GetStream(); //Gets The Stream of The Connection
             new Thread(() => // Thread (like Timer)
             {
