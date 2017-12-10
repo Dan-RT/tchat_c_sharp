@@ -42,7 +42,7 @@ namespace tuto_server
                     //on notifie le client que le server ferme
                 } catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
+                    //Console.WriteLine(ex);
                 }
                 //pour éviter que ça plante si personne ne s'est connecté
                 server.Stop();
@@ -53,7 +53,7 @@ namespace tuto_server
         {
             server.Start(); // Starts Listening to Any IPAddress trying to connect to the program with port 1980
             btn_listen.Text = "Stop Listening";
-            Console.WriteLine("Waiting For Connection");
+            //Console.WriteLine("Waiting For Connection");
             Change_text("Status : Waiting For Connection...");
             server_on = true;
             new Thread(() => // Creates a New Thread (like a timer)
@@ -68,7 +68,7 @@ namespace tuto_server
                         listConnectedClients.Add(client_tmp);
                         
                         Net.ServerSend(client, "client_connected");
-                        Console.WriteLine("Connected To Client");
+                        //Console.WriteLine("Connected To Client");
                         if (client.Connected) // If you are connected
                         {
                             Net.ServerReceive(client, this); //Start Receiving
@@ -99,13 +99,13 @@ namespace tuto_server
         public void Message_handling(byte[] data, TcpClient client)
         {
             string data_string = Encoding.Default.GetString(data);
-            Console.WriteLine(data_string);
+            //Console.WriteLine(data_string);
             char[] delimiterChars = { '@', '#'};
             string[] words = data_string.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries);
 
             for (var i = 0; i < words.Length; i++)
             {
-                System.Console.WriteLine("server : " + words[i]);
+                //System.Console.WriteLine("server : " + words[i]);
             }
             //words[0] --> pseudo du mec qui envoie
             //words[1] --> type du message
@@ -115,7 +115,7 @@ namespace tuto_server
             string type_message = words[1];
             Client client_tmp = new Client() { Name = words[0], IP = words[2], tcp_client = client };
             
-            System.Console.WriteLine(type_message);
+            //System.Console.WriteLine(type_message);
 
             if (type_message.Equals("connection", StringComparison.OrdinalIgnoreCase)) {
                 
@@ -126,7 +126,7 @@ namespace tuto_server
             } else if (type_message.Equals("disconnection", StringComparison.OrdinalIgnoreCase)) {
                
                 //disconnection
-                Console.WriteLine(client_tmp.Name + " is gone :( ");
+                //Console.WriteLine(client_tmp.Name + " is gone :( ");
                 //listConnectedClients.Remove(client);
                 remove_item_listConnectedClients(client_tmp);
                 Change_text("Status : " + client_tmp.Name + " is gone.");
@@ -140,11 +140,11 @@ namespace tuto_server
 
                 for (int i = 0; i < listConnectedClients.Count; i++)
                 {
-                    System.Console.WriteLine("receiver : " + receiver);
+                    //Console.WriteLine("receiver : " + receiver);
                     //if (name != client_tmp.Key)
                     if (receiver == listConnectedClients[i].Name)
                     {
-                        System.Console.WriteLine("forwarded to : " + listConnectedClients[i].Name);
+                        //System.Console.WriteLine("forwarded to : " + listConnectedClients[i].Name);
                         message = data_string;
                         Net.ServerSend(listConnectedClients[i].tcp_client, message);
                     }
@@ -182,10 +182,10 @@ namespace tuto_server
         {
             new Thread(() =>
             {
-                this.Name = "update_thread";
+                //this.Name = "update_thread";
                 while (server_on)
                 {
-                    //Console.WriteLine("Clients connected : ");
+                    ////Console.WriteLine("Clients connected : ");
                     lock(thisLock)
                     {
                         for (int i = 0; i < listConnectedClients.Count; i++)
@@ -196,16 +196,16 @@ namespace tuto_server
 
                             if (reply.Status == IPStatus.Success)
                             {
-                                /*Console.WriteLine("Address: {0}", reply.Address.ToString());
-                                Console.WriteLine("RoundTrip time: {0}", reply.RoundtripTime);
-                                Console.WriteLine("Time to live: {0}", reply.Options.Ttl);
-                                Console.WriteLine("Don't fragment: {0}", reply.Options.DontFragment);
-                                Console.WriteLine("Buffer size: {0}", reply.Buffer.Length);*/
+                                /*//Console.WriteLine("Address: {0}", reply.Address.ToString());
+                                //Console.WriteLine("RoundTrip time: {0}", reply.RoundtripTime);
+                                //Console.WriteLine("Time to live: {0}", reply.Options.Ttl);
+                                //Console.WriteLine("Don't fragment: {0}", reply.Options.DontFragment);
+                                //Console.WriteLine("Buffer size: {0}", reply.Buffer.Length);*/
                             }
                             else
                             {
-                                /*Console.WriteLine(reply.Status);
-                                Console.WriteLine(client_tmp.Key.Name + " is gone :( ");*/
+                                /*//Console.WriteLine(reply.Status);
+                                //Console.WriteLine(client_tmp.Key.Name + " is gone :( ");*/
                                 remove_item_listConnectedClients(listConnectedClients[i]);
                                 display_listConnectedClients();
                                 Change_text("Status : " + listConnectedClients[i].Name + " is gone.");
@@ -214,7 +214,7 @@ namespace tuto_server
                         }
                     }
                     display_listConnectedClients();
-                    //Console.WriteLine("Fin clients connected : ");
+                    ////Console.WriteLine("Fin clients connected : ");
                     //text_clients_connected.Text = data;
                     Net.ServerBroadcast(this, listConnectedClients, listConnectedClients_parser());
                     Thread.Sleep(5000);
@@ -270,7 +270,7 @@ namespace tuto_server
 
             if (flag)
             {
-                Console.WriteLine("Removing " + listConnectedClients[index].Name);
+                //Console.WriteLine("Removing " + listConnectedClients[index].Name);
                 listConnectedClients[index].tcp_client.Close();
                 listConnectedClients.RemoveAt(index);
             }
@@ -280,14 +280,14 @@ namespace tuto_server
         {
             lock(this)
             {
-                Console.WriteLine("\n\nDébut recap clients.");
+                //Console.WriteLine("\n\nDébut recap clients.");
                 for (int i = 0; i < listConnectedClients.Count; i++)
                 {
-                    Console.WriteLine("Name : " + listConnectedClients[i].Name);
-                    Console.WriteLine("IP : " + listConnectedClients[i].IP);
-                    Console.WriteLine("Client : " + listConnectedClients[i].tcp_client);
+                    //Console.WriteLine("Name : " + listConnectedClients[i].Name);
+                    //Console.WriteLine("IP : " + listConnectedClients[i].IP);
+                    //Console.WriteLine("Client : " + listConnectedClients[i].tcp_client);
                 }
-                Console.WriteLine("Fin recap clients.\n\n");
+                //Console.WriteLine("Fin recap clients.\n\n");
             }
         }
     }

@@ -92,13 +92,13 @@ namespace tuto_client
                    
                     if (home == null)
                     {
-                        Console.WriteLine("home boot");
+                        //Console.WriteLine("home boot");
                         //creating home page if connected
                         home = new Thread(new ThreadStart(Home_start));
                         home.Start();
                     } else if (!home.IsAlive)
                     {
-                        Console.WriteLine("home reboot");
+                        //Console.WriteLine("home reboot");
                         home = new Thread(new ThreadStart(Home_start));
                         home.Start();
                     }
@@ -110,7 +110,7 @@ namespace tuto_client
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Connection failed.");
+                //Console.WriteLine("Connection failed.");
                 MessageBox.Show(ex.Message);
             }
         }
@@ -144,14 +144,14 @@ namespace tuto_client
                         people_connected.Clear();
                         lock(this)
                         {
-                            Console.WriteLine("Clients connected : ");
+                            //Console.WriteLine("Clients connected : ");
                             for (var i = 2; i < words.Length; i++)
                             {
-                                System.Console.WriteLine(words[i]);
+                                //System.Console.WriteLine(words[i]);
                                 people_connected.Add(words[i]);
                             }
                             if (client_home != null) client_home.Generate_friend_list(people_connected);
-                            Console.WriteLine("End clients connected : ");
+                            //Console.WriteLine("End clients connected : ");
                         }
                     } else
                     {
@@ -189,7 +189,7 @@ namespace tuto_client
                     Application.Run(new_tchat);
                     Search_Delete_Tchat(new_tchat.FriendName);
                     //on enlève le tchat de la liste pour qu'on puisse le rouvrir plus tard
-                    Console.WriteLine("Tchat fermé");
+                    //Console.WriteLine("Tchat fermé");
                 }).Start();
             }
         }
@@ -210,7 +210,7 @@ namespace tuto_client
                     Application.Run(tchat);
                     Search_Delete_Tchat(tchat.FriendName);
                     //on enlève le tchat de la liste pour qu'on puisse le rouvrir plus tard
-                    Console.WriteLine("Tchat fermé");
+                    //Console.WriteLine("Tchat fermé");
                 }).Start();
             }
 
@@ -221,11 +221,11 @@ namespace tuto_client
 
         private Tchat Search_Name_Tchat(string name)
         {
-            Console.WriteLine("Current name tested : " + name);
+            //Console.WriteLine("Current name tested : " + name);
 
             foreach (Tchat item in tchat_Liste)
             {
-                Console.WriteLine("Current item : " + item.FriendName);
+                //Console.WriteLine("Current item : " + item.FriendName);
                 if (item.FriendName == name)
                 {
                     return item;
