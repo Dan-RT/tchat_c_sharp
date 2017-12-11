@@ -21,6 +21,7 @@ namespace tuto_client
             get { return _name; }
             set { _name = username; }
         }
+        Topic new_topic;
 
         public event EventHandler<New_tchat_event> Tchat_update;
         public delegate void DelegateRaisingEvent_String(string data);
@@ -39,7 +40,7 @@ namespace tuto_client
             InitializeComponent();
             Change_log_status("Connected");
             client_Label.Text = _name;
-            set_static_Friend_name();
+            //set_static_Friend_name();
             //Generate_friend_list();
         }
         
@@ -53,28 +54,13 @@ namespace tuto_client
             Log_update(this, new Log_btn_event(false, ""));
             this.Close();
         }
-
-        private void set_static_Friend_name ()
-        {
-            if (_name == "Dan")  friend_name_Label.Text = "Nico";
-            if (_name == "Nico") friend_name_Label.Text = "Dan";
-        }
-
-        private void Beginining_Message_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            if (_name == "Dan") Tchat_update(this, new New_tchat_event("Nico"));
-            if (_name == "Nico") Tchat_update(this, new New_tchat_event("Dan"));
-            //static for now
-        }
+        
         
         public void Exit_home ()
         {
             this.Close();
         }
-
-
-        /*  La suite est à contruire.  */
-
+        
         public void Generate_friend_list(List<String> friend_list)
         {
             if (this.InvokeRequired)
@@ -133,6 +119,27 @@ namespace tuto_client
             String target = e.Link.LinkData as String;
             Tchat_update(this, new New_tchat_event(target));
         }
+
+        private void create_group_chat_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            new_topic = new Topic();
+            new_topic.Group_chat_event += create_group_chat_;
+
+            Thread topic;
+            topic = new Thread(new ThreadStart(topic_start));
+            topic.Start();
+        }
+
+        private void topic_start ()
+        {
+            Application.Run(new_topic);
+        }
+
+        private void create_group_chat_(object sender, New_group_chat_event e)
+        {
+            MessageBox.Show(e.Data);
+        }
+        
     }
     
 }
