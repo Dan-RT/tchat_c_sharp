@@ -100,7 +100,7 @@ namespace tuto_server
         public void Message_handling(byte[] data, TcpClient client)
         {
             string data_string = Encoding.Default.GetString(data);
-            //Console.WriteLine(data_string);
+            Console.WriteLine("\n\nData server reçue : " + data_string);
             char[] delimiterChars = { '@', '#'};
             string[] words = data_string.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries);
 
@@ -118,14 +118,16 @@ namespace tuto_server
 
             //System.Console.WriteLine(type_message);
 
-            if (type_message == "connection") {
+            if (type_message == "connection")
+            {
 
                 //connection
                 Change_text("Status : " + client_tmp.Name + " connected.");
                 ModifyListConnectedClients(client_tmp);
 
             }
-            else if (type_message == "disconnection") {
+            else if (type_message == "disconnection")
+            {
 
                 //disconnection
                 //Console.WriteLine(client_tmp.Name + " is gone :( ");
@@ -134,7 +136,8 @@ namespace tuto_server
                 Change_text("Status : " + client_tmp.Name + " is gone.");
 
             }
-            else if (type_message == "NewGroupChat") {
+            else if (type_message == "NewGroupChat")
+            {
 
                 List<String> tmp_list_sub = new List<String>();
                 tmp_list_sub.Add(client_tmp.Name);
@@ -143,16 +146,48 @@ namespace tuto_server
                 listGroupChat.Add(group_tmp);
 
             }
-            else if (type_message == "GroupChatMessage") {
+            else if (type_message == "GroupChatMessage")
+            {
+                string receiver = words[2];
+                string message = words[3];
+                Change_text(Name + " to " + receiver + " : " + message);
 
+                for (int i = 0; i < listGroupChat.Count; i++)
+                {
+                    if (receiver == listGroupChat[i].topic)
+                    {
+                        for (int j = 0; j < listGroupChat[i].clients_subscribed.Count; j++)
+                        {
+                            for (int k = 0; k < listConnectedClients.Count; k++)
+                            {
+                                //Console.WriteLine("receiver : " + receiver);
+                                //if (name != client_tmp.Key)
+                                if (listGroupChat[i].clients_subscribed[j] == listConnectedClients[k].Name)
+                                {
+                                    //System.Console.WriteLine("forwarded to : " + listConnectedClients[i].Name);
+                                    message = data_string;
+                                    Net.ServerSend(listConnectedClients[k].tcp_client, message);
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
             }
-            else if (type_message == "LeaveGroupChatMessage") {
+            else if (type_message == "JoinGroupChatMessage")  {
+                ModifyListGroup(words[2], client_tmp.Name);
+            }
+            else if (type_message == "LeaveGroupChatMessage")
+            {
                 remove_item_list_Group(words[2], false, client_tmp.Name);
             }
-            else if (type_message == "DeleteGroupChat") {
+            else if (type_message == "DeleteGroupChat")
+            {
+                Console.WriteLine("Deleteting chat");
                 remove_item_list_Group(words[2], true);
-            }         
-            else if (type_message == "message") {
+            }
+            else if (type_message == "message")
+            {
 
                 //normal message
                 string receiver = words[2];
@@ -263,7 +298,28 @@ namespace tuto_server
                 listConnectedClients[index] = new Client() { Name = client_tmp.Name, IP = client_tmp.IP, tcp_client = client_tmp.tcp_client };
             }
         }
-        
+
+        public void ModifyListGroup(String topic, String name)
+        {
+            bool flag = false;
+            int index = 0;
+
+            for (int i = 0; i < listGroupChat.Count; i++)
+            {
+                if (listGroupChat[i].topic == topic)
+                {
+                    flag = true;
+                    index = i;
+                    break;
+                }
+            }
+
+            if (flag)
+            {
+                listGroupChat[index].clients_subscribed.Add(name);
+            }
+        }
+
         public String listConnectedClients_parser()
         {
             string list = "@server#List_clients";
@@ -274,9 +330,10 @@ namespace tuto_server
 
             if (listGroupChat.Count > 0)
             {
+                list += "@";
                 for (int i = 0; i < listGroupChat.Count; i++)
                 {
-                    list += "@" + listGroupChat[i].topic;
+                    list += "&" + listGroupChat[i].topic;
                 }
             }
 

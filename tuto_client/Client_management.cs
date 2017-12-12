@@ -23,6 +23,8 @@ namespace tuto_client
         private Login client_login;
         private List<Tchat> tchat_Liste = new List<Tchat>(0);
         private List<String> people_connected = new List<String>(0);
+        private List<String> group_connected = new List<String>(0);
+        private List<String> group_belonging = new List<String>(0);
         private Thread login;
         private Thread home = null;
         private Net Net = null;
@@ -51,6 +53,7 @@ namespace tuto_client
             client_home = new Home(_username);
             client_home.Log_update += Connection_management;
             client_home.Tchat_update += Open_new_tchat;
+            client_home.New_Tchat_update += create_group_chat;
             Application.Run(client_home);
         }
         
@@ -127,6 +130,8 @@ namespace tuto_client
             {
                 //Messages_Feed.Text += System.Environment.NewLine + "Status : Connected to server.";
             } else {
+
+                Console.WriteLine("\n\n\nData reçue : " + data);
                 char[] delimiterChars = { '@', '#' };
                 string[] words = data.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries);
                 
@@ -147,10 +152,25 @@ namespace tuto_client
                             //Console.WriteLine("Clients connected : ");
                             for (var i = 2; i < words.Length; i++)
                             {
-                                //System.Console.WriteLine(words[i]);
-                                people_connected.Add(words[i]);
+                                Console.WriteLine("Group chats : ");
+                                if (i == words.Length - 1 && words[i].Contains("&"))
+                                {
+                                    //getting group chats
+                                    char[] delimiterChars_2 = { '&' };
+                                    string[] words_2 = words[i].Split(delimiterChars_2, StringSplitOptions.RemoveEmptyEntries);
+                                    for(var j = 0; j < words_2.Length; j++)
+                                    {
+                                        Console.WriteLine(words_2[j]);
+                                        group_connected.Add(words_2[j]);
+                                    } 
+
+                                } else
+                                {
+                                    people_connected.Add(words[i]);
+                                }
                             }
-                            if (client_home != null) client_home.Generate_friend_list(people_connected);
+                            Console.WriteLine("End Group chats.");
+                            if (client_home != null) client_home.Generate_friend_list(people_connected, group_connected);
                             //Console.WriteLine("End clients connected : ");
                         }
                     } else
@@ -177,18 +197,29 @@ namespace tuto_client
 
         private void Open_new_tchat(object sender, New_tchat_event p)   //function which can be called from outside with a event
         {
-            if (Search_Name_Tchat(p.Data) == null)
+            Tchat new_tchat;
+
+            if (Search_Name_Tchat(p.Name) == null)
             //si le Tchat n'existe pas déjà, on évite de l'ouvrir deux fois
             {
-                Tchat new_tchat = new Tchat(this._username, p.Data, p.Group);
+                if (p.Group && !Search_Group(p.Name))
+                {
+                    if (Display_Message_Box("Do you want to join this group chat ?"))
+                    {
+                        group_belonging.Add(p.Name);
+                        new_tchat = new Tchat(this._username, p.Name, true);
+                        Net.ClientSend(client, "@" + _username + "#JoinGroupChatMessage" + "@" + p.Name);
+                    } else
+                    {
+                        return;
+                    }
+                } else
+                {
+                    new_tchat = new Tchat(this._username, p.Name, false);
+                }
+               
                 new_tchat.Send_update += Send_Message;
                 tchat_Liste.Add(new_tchat);
-
-                if (p.Group)
-                {
-                    new_tchat.Action_group_update += Action_on_group;
-                    Net.ClientSend(client, "@" + _username + "#NewGroupChat" + "@" + p.Data);
-                }
 
                 new Thread(() =>
                 {
@@ -197,10 +228,33 @@ namespace tuto_client
                     //on enlève le tchat de la liste pour qu'on puisse le rouvrir plus tard
                     //Console.WriteLine("Tchat fermé");
                 }).Start();
+            }
+        }
+
+        private void create_group_chat (object sender, New_group_event e)
+        {
+            if (Search_Name_Tchat(e.Name) == null)
+            {
+                Tchat new_tchat = new Tchat(this._username, e.Name, true);
+                new_tchat.Send_update += Send_Message;
+                new_tchat.Action_group_update += Action_on_group;
                 
+                group_belonging.Add(e.Name);
+                tchat_Liste.Add(new_tchat);
+                
+                Net.ClientSend(client, "@" + _username + "#NewGroupChat" + "@" + e.Name);
+
+                new Thread(() =>
+                {
+                    Application.Run(new_tchat);
+                    Search_Delete_Tchat(new_tchat.FriendName); 
+                    //on enlève le tchat de la liste pour qu'on puisse le rouvrir plus tard
+                    //Console.WriteLine("Tchat fermé");
+                }).Start();
+
             } else
             {
-                if (p.Group) MessageBox.Show("This topic already exists.");
+                MessageBox.Show("Please choose an other topic.");
             }
         }
 
@@ -257,6 +311,18 @@ namespace tuto_client
             return false;
         }
 
+        private bool Search_Group(string name)
+        {
+            foreach (String item in group_belonging)
+            {
+                if (item == name)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void Action_on_group (object sender, Action_group_event e)
         {
             //si on veut supprimer ou quitter le groupe
@@ -267,6 +333,30 @@ namespace tuto_client
             {
                 Net.ClientSend(client, "@" + _username + "#LeaveGroupChatMessage" + "@" + e.Data);
             }
+            group_belonging.Remove(e.Data);
+        }
+
+        private bool Display_Message_Box (string question)
+        {
+            // Configure the message box to be displayed
+            string messageBoxText = question;
+            string caption = "Word Processor";
+            MessageBoxButtons button = MessageBoxButtons.YesNoCancel;
+            
+            // Display message box
+            DialogResult result = MessageBox.Show(messageBoxText, caption, button);
+
+            // Process message box results
+            switch (result)
+            {
+                case DialogResult.Yes:
+                    return true;
+                case DialogResult.No:
+                    return false;
+                case DialogResult.Cancel:
+                    return false;
+            }
+            return false;
         }
     }
 
@@ -306,12 +396,12 @@ namespace tuto_client
 
     public class New_tchat_event : EventArgs
     {
-        private string _data;
-        public string Data
+        private string _name;
+        public string Name
         {
-            get { return _data; }
+            get { return _name; }
         }
-        private bool _group;
+        private bool _group;   
         public bool Group
         {
             get { return _group; }
@@ -319,8 +409,22 @@ namespace tuto_client
 
         public New_tchat_event(string data, bool data_bool) : base()
         {
-            _data = data;
+            _name = data;
             _group = data_bool;
+        }
+    }
+
+    public class New_group_event : EventArgs
+    {
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+        }
+
+        public New_group_event(string name) : base()
+        {
+            _name = name;
         }
     }
 
@@ -332,7 +436,7 @@ namespace tuto_client
             get { return _data; }
         }
 
-        private bool _delete;
+        private bool _delete;   //si c'est pas un delete c'est un leave
         public bool Delete
         {
             get { return _delete; }

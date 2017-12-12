@@ -29,7 +29,9 @@ namespace tuto_client
         public event EventHandler<Log_btn_event> Log_update;
         public delegate void DelegateRaisingEvent_Bool(bool log);
 
-        delegate void Generate_friend_list_Callback_safe(List<String> friend_list);
+        public event EventHandler<New_group_event> New_Tchat_update;
+        
+        delegate void Generate_friend_list_Callback_safe(List<String> friend_list, List<String> group_list);
 
         private List<LinkLabel> label_list = new List<LinkLabel>();
         //private List<String> friend_list = new List<String>();
@@ -60,28 +62,28 @@ namespace tuto_client
             this.Close();
         }
         
-        public void Generate_friend_list(List<String> friend_list)
+        public void Generate_friend_list(List<String> friend_list, List<String> group_list)
         {
             if (this.InvokeRequired)
             {
                 Generate_friend_list_Callback_safe d = new Generate_friend_list_Callback_safe(Generate_friend_list);
-                this.Invoke(d, new object[] { friend_list });
+                this.Invoke(d, new object[] { friend_list, group_list });
             }
             else
             {
                 foreach (Label label_tmp in label_list)
                 {
-                    Console.WriteLine("\n\nRemoving friend list"); 
+                    Console.WriteLine("\n\nRemoving " + label_tmp.Text + " item."); 
                     this.Controls.Remove(label_tmp);
                 }
                 label_list.Clear();
 
                 foreach (String friend in friend_list)
                 {
-                    Console.WriteLine("\nCreating friend list");
+                    //Console.WriteLine("\nCreating friend list");
                     if (friend != _name)
                     {
-                        Console.WriteLine("\nCreating " + friend + " item");
+                        //Console.WriteLine("\nCreating " + friend + " item");
                         LinkLabel label_tmp = new LinkLabel();
                         label_tmp.Text = friend;
                         label_tmp.Links[0].LinkData = friend;
@@ -100,7 +102,6 @@ namespace tuto_client
                             label_tmp.Top = 186 + ((labelHeight + labelMargin) * label_list.Count) + labelMargin;
                         }
                         
-
                         label_tmp.Left = 252;
                         label_tmp.Width = labelWidth;
 
@@ -110,15 +111,55 @@ namespace tuto_client
                         this.Controls.Add(label_tmp);
                     }
                 }
+
+                foreach (String group in group_list)
+                {
+                    LinkLabel label_tmp = new LinkLabel();
+                    label_tmp.Text = group;
+                    label_tmp.Links[0].LinkData = group;
+                    label_tmp.LinkColor = System.Drawing.Color.Black;
+
+                    const int labelWidth = 200;  // control variables for TextBox placement
+                    const int labelHeight = 25;
+                    const int labelMargin = 4;
+
+                    if (label_list.Count == 0)
+                    {
+                        label_tmp.Top = 186 + labelMargin;
+                    }
+                    else
+                    {
+                        label_tmp.Top = 186 + ((labelHeight + labelMargin) * label_list.Count) + labelMargin;
+                    }
+
+
+                    label_tmp.Name = "Group_" + label_tmp.Top;
+                    label_tmp.Left = 252;
+                    label_tmp.Width = labelWidth;
+
+                    label_tmp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Label_LinkClicked);
+
+                    label_list.Add(label_tmp);
+                    this.Controls.Add(label_tmp);
+                }
+
+
             }
         }
 
         private void Label_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             String target = e.Link.LinkData as String;
-            Tchat_update(this, new New_tchat_event(target, false));
-        }
+            Label label_tmp = sender as Label;
 
+            if(label_tmp.Name.Contains("Group_")) {
+                Tchat_update(this, new New_tchat_event(target, true));
+            } else
+            {
+                Tchat_update(this, new New_tchat_event(target, false));
+            }
+        }
+    
         private void create_group_chat_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             new_topic = new Topic();
@@ -136,8 +177,7 @@ namespace tuto_client
 
         private void create_group_chat_(object sender, New_group_chat_event e)
         {
-            Tchat_update(this, new New_tchat_event(e.Data, true));
-            MessageBox.Show(e.Data);
+            New_Tchat_update(this, new New_group_event(e.Data));
         }
     }
 }

@@ -143,7 +143,8 @@ namespace tuto_client
 
         private void leave_group_button_Click(object sender, EventArgs e)
         {
-            Action_group_update(this, new Action_group_event(_name, false));
+            Action_group_update(this, new Action_group_event(_friendName, false));
+            this.Exit_tchat();
         }
 
         public void Exit_tchat()
@@ -153,7 +154,8 @@ namespace tuto_client
 
         private void delete_group_button_Click(object sender, EventArgs e)
         {
-            Action_group_update(this, new Action_group_event(_name, true));
+            Action_group_update(this, new Action_group_event(_friendName, true));
+            this.Exit_tchat();
         }
     }
 }
