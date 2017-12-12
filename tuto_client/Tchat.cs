@@ -54,7 +54,13 @@ namespace tuto_client
             string message = Text_Send.Text;
             if (message != "")
             {
-                message = "@" + this._name + "#message" + "@" + this._friendName + "#" + message;
+                if (_group)
+                {
+                    message = "@" + this._name + "#GroupChatMessage" + "@" + this._friendName + "#" + message;
+                } else
+                {
+                    message = "@" + this._name + "#message" + "@" + this._friendName + "#" + message;
+                }
                 Send_update(this, new Send_btn_event(message));
             }
         }

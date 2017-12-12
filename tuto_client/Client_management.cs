@@ -131,7 +131,7 @@ namespace tuto_client
                 //Messages_Feed.Text += System.Environment.NewLine + "Status : Connected to server.";
             } else {
 
-                Console.WriteLine("\n\n\nData reçue : " + data);
+                Console.WriteLine("\n\n\nClients Data reçue : " + data);
                 char[] delimiterChars = { '@', '#' };
                 string[] words = data.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries);
                 
@@ -144,10 +144,14 @@ namespace tuto_client
                 {
                     string sender = words[0];
                     string type_message = words[1];
+                    string receiver = words[2];
+                    string message = words[3];
+
                     if (type_message == "List_clients")
                     {
                         people_connected.Clear();
-                        lock(this)
+                        group_connected.Clear();
+                        lock (this)
                         {
                             //Console.WriteLine("Clients connected : ");
                             for (var i = 2; i < words.Length; i++)
@@ -175,8 +179,14 @@ namespace tuto_client
                         }
                     } else
                     {
-                        string message = words[3];
-                        Open_tchat(sender, message);
+                        if (receiver != _username)
+                        {
+                            //c'est un groupe
+                            Open_tchat(receiver, message, true, sender);
+                        } else
+                        {
+                            Open_tchat(sender, message);
+                        }
                     }
                 }
                 
@@ -258,7 +268,7 @@ namespace tuto_client
             }
         }
 
-        private void Open_tchat(string sender, string message)    //function to be called from client_side
+        private void Open_tchat(string sender, string message, bool group = false, string group_sender = "")    //function to be called from client_side
         {
             Tchat tchat = Search_Name_Tchat(sender);
 
@@ -279,7 +289,14 @@ namespace tuto_client
             }
 
             //Il existe maintenant forcément, on lui balance le message
-            tchat.ThreadProcSafe(sender + " : " + message);
+            if (group)
+            {
+                tchat.ThreadProcSafe(group_sender + " : " + message);
+            }
+            else
+            {
+                tchat.ThreadProcSafe(sender + " : " + message);
+            }
         }
 
         private Tchat Search_Name_Tchat(string name)

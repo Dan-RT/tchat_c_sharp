@@ -162,7 +162,7 @@ namespace tuto_server
                             {
                                 //Console.WriteLine("receiver : " + receiver);
                                 //if (name != client_tmp.Key)
-                                if (listGroupChat[i].clients_subscribed[j] == listConnectedClients[k].Name)
+                                if (listGroupChat[i].clients_subscribed[j] == listConnectedClients[k].Name && listGroupChat[i].clients_subscribed[j] != client_tmp.Name)
                                 {
                                     //System.Console.WriteLine("forwarded to : " + listConnectedClients[i].Name);
                                     message = data_string;

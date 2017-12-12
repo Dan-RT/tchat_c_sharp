@@ -71,6 +71,7 @@ namespace tuto_client
             }
             else
             {
+                displaying_group_list(group_list);
                 foreach (Label label_tmp in label_list)
                 {
                     Console.WriteLine("\n\nRemoving " + label_tmp.Text + " item."); 
@@ -178,6 +179,16 @@ namespace tuto_client
         private void create_group_chat_(object sender, New_group_chat_event e)
         {
             New_Tchat_update(this, new New_group_event(e.Data));
+        }
+
+        private void displaying_group_list (List<String> group_list)
+        {
+            Console.WriteLine("Display group_list");
+            foreach (string item in group_list)
+            {
+                Console.WriteLine(item);
+            }
+            Console.WriteLine("End display group_list");
         }
     }
 }
