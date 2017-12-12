@@ -178,12 +178,18 @@ namespace tuto_client
         private void Open_new_tchat(object sender, New_tchat_event p)   //function which can be called from outside with a event
         {
             if (Search_Name_Tchat(p.Data) == null)
-                //si le Tchat n'existe pas déjà, on évite de l'ouvrir deux fois
+            //si le Tchat n'existe pas déjà, on évite de l'ouvrir deux fois
             {
-                Tchat new_tchat = new Tchat(this._username, p.Data);
+                Tchat new_tchat = new Tchat(this._username, p.Data, p.Group);
                 new_tchat.Send_update += Send_Message;
                 tchat_Liste.Add(new_tchat);
-                
+
+                if (p.Group)
+                {
+                    new_tchat.Action_group_update += Action_on_group;
+                    Net.ClientSend(client, "@" + _username + "#NewGroupChat" + "@" + p.Data);
+                }
+
                 new Thread(() =>
                 {
                     Application.Run(new_tchat);
@@ -191,6 +197,10 @@ namespace tuto_client
                     //on enlève le tchat de la liste pour qu'on puisse le rouvrir plus tard
                     //Console.WriteLine("Tchat fermé");
                 }).Start();
+                
+            } else
+            {
+                if (p.Group) MessageBox.Show("This topic already exists.");
             }
         }
 
@@ -201,7 +211,7 @@ namespace tuto_client
             if (tchat == null)
             //si le Tchat n'existe pas déjà, on le crée
             {
-                tchat = new Tchat(this._username, sender);
+                tchat = new Tchat(this._username, sender, false);
                 tchat.Send_update += Send_Message;
                 tchat_Liste.Add(tchat);
                 
@@ -216,7 +226,6 @@ namespace tuto_client
 
             //Il existe maintenant forcément, on lui balance le message
             tchat.ThreadProcSafe(sender + " : " + message);
-
         }
 
         private Tchat Search_Name_Tchat(string name)
@@ -247,7 +256,18 @@ namespace tuto_client
             MessageBox.Show("Error : Tchat not found to be deleted.");
             return false;
         }
-        
+
+        private void Action_on_group (object sender, Action_group_event e)
+        {
+            //si on veut supprimer ou quitter le groupe
+            if (e.Delete)
+            {
+                Net.ClientSend(client, "@" + _username + "#DeleteGroupChat" + "@" + e.Data);
+            } else
+            {
+                Net.ClientSend(client, "@" + _username + "#LeaveGroupChatMessage" + "@" + e.Data);
+            }
+        }
     }
 
     public class Log_btn_event : EventArgs
@@ -291,11 +311,37 @@ namespace tuto_client
         {
             get { return _data; }
         }
+        private bool _group;
+        public bool Group
+        {
+            get { return _group; }
+        }
 
-        public New_tchat_event(string data) : base()
+        public New_tchat_event(string data, bool data_bool) : base()
         {
             _data = data;
+            _group = data_bool;
         }
     }
-    
+
+    public class Action_group_event : EventArgs
+    {
+        private string _data;
+        public string Data
+        {
+            get { return _data; }
+        }
+
+        private bool _delete;
+        public bool Delete
+        {
+            get { return _delete; }
+        }
+
+        public Action_group_event(string data, bool delete) : base()
+        {
+            _data = data;
+            _delete = delete;
+        }
+    }
 }

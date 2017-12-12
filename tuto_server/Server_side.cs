@@ -16,6 +16,7 @@ namespace tuto_server
         //private TcpClient client; // Creates a TCP Client
         //private Dictionary<TcpClient, Infos_client> listConnectedClients = new Dictionary<TcpClient, Infos_client>();
         private List<Client> listConnectedClients = new List<Client>(); //On teste une liste plutôt qu'un dico, car on veut pouvoir modif les données
+        private List<Group_chat> listGroupChat = new List<Group_chat>();
         private bool server_on = false;
         private delegate void SetTextCallback_safe(string data);
         private delegate void SetTextCallback_listen(string data);
@@ -114,24 +115,44 @@ namespace tuto_server
             
             string type_message = words[1];
             Client client_tmp = new Client() { Name = words[0], IP = words[2], tcp_client = client };
-            
+
             //System.Console.WriteLine(type_message);
 
-            if (type_message.Equals("connection", StringComparison.OrdinalIgnoreCase)) {
-                
+            if (type_message == "connection") {
+
                 //connection
                 Change_text("Status : " + client_tmp.Name + " connected.");
                 ModifyListConnectedClients(client_tmp);
 
-            } else if (type_message.Equals("disconnection", StringComparison.OrdinalIgnoreCase)) {
-               
+            }
+            else if (type_message == "disconnection") {
+
                 //disconnection
                 //Console.WriteLine(client_tmp.Name + " is gone :( ");
                 //listConnectedClients.Remove(client);
                 remove_item_listConnectedClients(client_tmp);
                 Change_text("Status : " + client_tmp.Name + " is gone.");
 
-            } else if (type_message == "message") {
+            }
+            else if (type_message == "NewGroupChat") {
+
+                List<String> tmp_list_sub = new List<String>();
+                tmp_list_sub.Add(client_tmp.Name);
+
+                Group_chat group_tmp = new Group_chat() { clients_subscribed = tmp_list_sub, topic = words[2] };
+                listGroupChat.Add(group_tmp);
+
+            }
+            else if (type_message == "GroupChatMessage") {
+
+            }
+            else if (type_message == "LeaveGroupChatMessage") {
+                remove_item_list_Group(words[2], false, client_tmp.Name);
+            }
+            else if (type_message == "DeleteGroupChat") {
+                remove_item_list_Group(words[2], true);
+            }         
+            else if (type_message == "message") {
 
                 //normal message
                 string receiver = words[2];
@@ -250,6 +271,15 @@ namespace tuto_server
             {
                 list += "@" + listConnectedClients[i].Name;
             }
+
+            if (listGroupChat.Count > 0)
+            {
+                for (int i = 0; i < listGroupChat.Count; i++)
+                {
+                    list += "@" + listGroupChat[i].topic;
+                }
+            }
+
             return list;
         }
 
@@ -276,6 +306,51 @@ namespace tuto_server
             }
         }
 
+        public void remove_item_list_Group(String name_group, bool delete, string name_client = "")
+        {
+            bool flag = false;
+            int index = 0;
+
+            for (int i = 0; i < listGroupChat.Count; i++)
+            {
+                if (listGroupChat[i].topic == name_group)
+                {
+                    flag = true;
+                    index = i;
+                    break;
+                }
+            }
+            if (flag)
+            {
+                bool flag_2 = false;
+                int index_2 = 0;
+
+                if (delete)
+                {
+                    Console.WriteLine("Delete " + listGroupChat[index].topic);
+                    listGroupChat.RemoveAt(index);
+                }
+                else
+                {
+                    //on veut quitter le groupe donc enlever un abonné 
+                    for (int i = 0; i < listGroupChat[index].clients_subscribed.Count; i++)
+                    {
+                        if (listGroupChat[index].clients_subscribed[i] == name_client)
+                        {
+                            flag_2 = true;
+                            index_2 = i;
+                            break;
+                        }
+                    }
+                    if (flag_2)
+                    {
+                        Console.WriteLine("Removing " + name_client + " from " + listGroupChat[index].topic);
+                        listGroupChat[index].clients_subscribed.RemoveAt(index_2);
+                    }
+                }
+            }
+        }
+
         public void display_listConnectedClients ()
         {
             lock(this)
@@ -297,5 +372,11 @@ namespace tuto_server
         public string Name { get; set; }
         public string IP { get; set; }
         public TcpClient tcp_client { get; set; }
+    }
+
+    public struct Group_chat
+    {
+        public List<String> clients_subscribed;
+        public string topic { get; set; }
     }
 }

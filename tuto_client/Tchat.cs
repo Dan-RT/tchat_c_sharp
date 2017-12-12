@@ -6,6 +6,12 @@ namespace tuto_client
 {
     public partial class Tchat : Form
     {
+        private bool _group;
+        public bool Group
+        {
+            get { return _group; }
+            set { _group = Group; }
+        }
         private string _name;
         public string username
         {
@@ -25,14 +31,22 @@ namespace tuto_client
 
         public event EventHandler<Send_btn_event> Send_update;
         public delegate void DelegateRaisingEvent(string message);
-        
-        public Tchat(string name, string friend)
+
+        public event EventHandler<Action_group_event> Action_group_update;
+
+        public Tchat(string name, string friend, bool Group)
         {
             _name = name;
+            _group = Group;
             _friendName = friend;
             InitializeComponent();
             client_Label.Text = "You : " + _name;
             friend_label.Text = _friendName;
+            if (!_group)
+            {
+                leave_group_button.Visible = false;
+                delete_group_button.Visible = false;
+            }
         }
 
         private void Btn_Send_Click(object sender, EventArgs e)
@@ -127,10 +141,19 @@ namespace tuto_client
             this.Update_message_feed(text);
         }
 
+        private void leave_group_button_Click(object sender, EventArgs e)
+        {
+            Action_group_update(this, new Action_group_event(_name, false));
+        }
+
         public void Exit_tchat()
         {
             this.Close();
         }
-        
+
+        private void delete_group_button_Click(object sender, EventArgs e)
+        {
+            Action_group_update(this, new Action_group_event(_name, true));
+        }
     }
 }

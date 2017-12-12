@@ -55,7 +55,6 @@ namespace tuto_client
             this.Close();
         }
         
-        
         public void Exit_home ()
         {
             this.Close();
@@ -117,7 +116,7 @@ namespace tuto_client
         private void Label_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             String target = e.Link.LinkData as String;
-            Tchat_update(this, new New_tchat_event(target));
+            Tchat_update(this, new New_tchat_event(target, false));
         }
 
         private void create_group_chat_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -137,9 +136,8 @@ namespace tuto_client
 
         private void create_group_chat_(object sender, New_group_chat_event e)
         {
+            Tchat_update(this, new New_tchat_event(e.Data, true));
             MessageBox.Show(e.Data);
         }
-        
     }
-    
 }
