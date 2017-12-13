@@ -31,8 +31,9 @@ namespace tuto_client
 
         public event EventHandler<Send_btn_event> Send_update;
         public delegate void DelegateRaisingEvent(string message);
-
+        
         public event EventHandler<Action_group_event> Action_group_update;
+        public delegate void DelegateAction_group_event(string data, bool delete);
 
         public Tchat(string name, string friend, bool Group)
         {

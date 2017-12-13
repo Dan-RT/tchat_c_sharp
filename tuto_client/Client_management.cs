@@ -174,6 +174,8 @@ namespace tuto_client
                                 }
                             }
                             Console.WriteLine("End Group chats.");
+
+                            Console.WriteLine("Generate_friend_list function should be called.");
                             if (client_home != null) client_home.Generate_friend_list(people_connected, group_connected);
                             //Console.WriteLine("End clients connected : ");
                         }
@@ -218,6 +220,7 @@ namespace tuto_client
                     {
                         group_belonging.Add(p.Name);
                         new_tchat = new Tchat(this._username, p.Name, true);
+                        new_tchat.Action_group_update += Action_on_group;
                         Net.ClientSend(client, "@" + _username + "#JoinGroupChatMessage" + "@" + p.Name);
                     } else
                     {
@@ -277,6 +280,7 @@ namespace tuto_client
             {
                 tchat = new Tchat(this._username, sender, false);
                 tchat.Send_update += Send_Message;
+                tchat.Action_group_update += Action_on_group;
                 tchat_Liste.Add(tchat);
                 
                 new Thread(() =>

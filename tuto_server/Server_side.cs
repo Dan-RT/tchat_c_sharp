@@ -33,7 +33,7 @@ namespace tuto_server
             if (!server_on)
             {
                 Start_listening();
-                Update_list_client();
+                Update_list_client(false);
             }
             else
             {
@@ -135,6 +135,8 @@ namespace tuto_server
                 remove_item_listConnectedClients(client_tmp);
                 Change_text("Status : " + client_tmp.Name + " is gone.");
 
+                Update_list_client(true);
+
             }
             else if (type_message == "NewGroupChat")
             {
@@ -144,6 +146,8 @@ namespace tuto_server
 
                 Group_chat group_tmp = new Group_chat() { clients_subscribed = tmp_list_sub, topic = words[2] };
                 listGroupChat.Add(group_tmp);
+
+                Update_list_client(true);
 
             }
             else if (type_message == "GroupChatMessage")
@@ -183,8 +187,9 @@ namespace tuto_server
             }
             else if (type_message == "DeleteGroupChat")
             {
-                Console.WriteLine("Deleteting chat");
+                Console.WriteLine("Deleting chat");
                 remove_item_list_Group(words[2], true);
+                Update_list_client(true);
             }
             else if (type_message == "message")
             {
@@ -234,15 +239,15 @@ namespace tuto_server
             }
         }
         
-        public void Update_list_client()
+        public void Update_list_client(bool single_iteration)
         {
             new Thread(() =>
             {
                 //this.Name = "update_thread";
-                while (server_on)
+                do
                 {
                     ////Console.WriteLine("Clients connected : ");
-                    lock(thisLock)
+                    lock (thisLock)
                     {
                         for (int i = 0; i < listConnectedClients.Count; i++)
                         {
@@ -273,8 +278,13 @@ namespace tuto_server
                     ////Console.WriteLine("Fin clients connected : ");
                     //text_clients_connected.Text = data;
                     Net.ServerBroadcast(this, listConnectedClients, listConnectedClients_parser());
-                    Thread.Sleep(5000);
-                }
+
+                    if (!single_iteration) { Thread.Sleep(5000); }
+
+                } while (server_on && !single_iteration);
+
+                if(single_iteration) { Console.WriteLine("Updating List clients on server side, only one iteration is done."); }
+
             }).Start(); // Start the Thread
         }
 

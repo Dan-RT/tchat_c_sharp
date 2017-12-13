@@ -34,7 +34,6 @@ namespace tuto_client
         delegate void Generate_friend_list_Callback_safe(List<String> friend_list, List<String> group_list);
 
         private List<LinkLabel> label_list = new List<LinkLabel>();
-        //private List<String> friend_list = new List<String>();
 
         public Home(string name)
         {
@@ -71,6 +70,7 @@ namespace tuto_client
             }
             else
             {
+                Console.WriteLine("Generate_friend_list function called.");
                 displaying_group_list(group_list);
                 foreach (Label label_tmp in label_list)
                 {
