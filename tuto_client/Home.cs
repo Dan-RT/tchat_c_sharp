@@ -41,6 +41,7 @@ namespace tuto_client
             InitializeComponent();
             Change_log_status("Connected");
             client_Label.Text = _name;
+            Application.ApplicationExit += new EventHandler(this.OnApplicationExit);
             //set_static_Friend_name();
             //Generate_friend_list();
         }
@@ -70,11 +71,11 @@ namespace tuto_client
             }
             else
             {
-                Console.WriteLine("Generate_friend_list function called.");
-                displaying_group_list(group_list);
+               //console.WriteLine("Generate_friend_list function called.");
+                //displaying_group_list(group_list);
                 foreach (Label label_tmp in label_list)
                 {
-                    Console.WriteLine("\n\nRemoving " + label_tmp.Text + " item."); 
+                   //console.WriteLine("\n\nRemoving " + label_tmp.Text + " item."); 
                     this.Controls.Remove(label_tmp);
                 }
                 label_list.Clear();
@@ -190,5 +191,12 @@ namespace tuto_client
             }
             Console.WriteLine("End display group_list");
         }
+
+        private void OnApplicationExit(object sender, EventArgs e)
+        {
+            Log_update(this, new Log_btn_event(false, ""));
+            this.Close();
+        }
+
     }
 }

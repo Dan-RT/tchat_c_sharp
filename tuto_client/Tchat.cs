@@ -26,7 +26,9 @@ namespace tuto_client
             set { _friendName = FriendName; }
         }
 
-        delegate void SetTextCallback(string text);
+        private bool _send_message_enabled;
+        
+        delegate void SetTextCallback_exit();
         delegate void SetTextCallback_safe(string text);
 
         public event EventHandler<Send_btn_event> Send_update;
@@ -43,6 +45,7 @@ namespace tuto_client
             InitializeComponent();
             client_Label.Text = "You : " + _name;
             friend_label.Text = _friendName;
+            _send_message_enabled = true;
             if (!_group)
             {
                 leave_group_button.Visible = false;
@@ -53,7 +56,7 @@ namespace tuto_client
         private void Btn_Send_Click(object sender, EventArgs e)
         {
             string message = Text_Send.Text;
-            if (message != "")
+            if (message != "" && _send_message_enabled)
             {
                 if (_group)
                 {
@@ -77,6 +80,11 @@ namespace tuto_client
             }
         }
         
+        public void Toggle_send_button(bool state)
+        {
+            _send_message_enabled = state;
+        }
+
         public void Update_message_feed (byte[] data)
         {
             //string message = "@" + this._username + "#message" + "@" + receiver + "#" + pe.Message;
@@ -156,7 +164,15 @@ namespace tuto_client
 
         public void Exit_tchat()
         {
-            this.Close();
+            if (this.InvokeRequired)
+            {
+                SetTextCallback_exit d = new SetTextCallback_exit(Exit_tchat);
+                this.Invoke(d, new object[] { });
+            }
+            else
+            {
+                this.Close();
+            }
         }
 
         private void delete_group_button_Click(object sender, EventArgs e)

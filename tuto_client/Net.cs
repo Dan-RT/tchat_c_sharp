@@ -16,7 +16,7 @@ namespace tuto_client
 
         public bool ClientSend(TcpClient client, string msg)
         {
-            System.Console.WriteLine("clientSend called");
+            //System.Console.WriteLine("clientSend called");
             try
             {
                 NetworkStream stream = client.GetStream(); //Gets The Stream of The Connection
@@ -31,7 +31,7 @@ namespace tuto_client
             }
             catch (System.ObjectDisposedException ex)
             {
-                Console.WriteLine(ex);
+               //console.WriteLine(ex);
                 return false;
             }
         }
@@ -40,7 +40,7 @@ namespace tuto_client
         {
             int i = 0;
             byte[] datalength = new byte[4]; // creates a new byte with length 4 ( used for receivng data's lenght)
-            System.Console.WriteLine("clientReceive called");
+            //System.Console.WriteLine("clientReceive called");
             NetworkStream stream = client_tcp.GetStream(); //Gets The Stream of The Connection
 
             if (!client_tcp.Connected)

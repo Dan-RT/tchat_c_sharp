@@ -76,6 +76,7 @@ namespace tuto_client
             {
                 //logout
                 Close_connection();
+                DeleteTchatListe();
             }
         }
         
@@ -129,23 +130,26 @@ namespace tuto_client
             if (data == "client_connected")
             {
                 //Messages_Feed.Text += System.Environment.NewLine + "Status : Connected to server.";
-            } else {
+            }
+            else {
 
-                Console.WriteLine("\n\n\nClients Data reçue : " + data);
+
+                Console.WriteLine("\n\nData reçue sur le client " + _username + " : " + data);
                 char[] delimiterChars = { '@', '#' };
                 string[] words = data.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries);
-                
+
+                Console.WriteLine("Type message : " + words[1]);
+
                 //words[0] --> pseudo du mec qui envoie
                 //words[1] --> type du message
                 //words[2] --> optionnel : pseudo du receveur
                 //words[3] --> optionnel : message pour le receveur
 
-                if (words.Length > 3)
+                if (words.Length >= 3)
                 {
                     string sender = words[0];
                     string type_message = words[1];
                     string receiver = words[2];
-                    string message = words[3];
 
                     if (type_message == "List_clients")
                     {
@@ -156,54 +160,99 @@ namespace tuto_client
                             //Console.WriteLine("Clients connected : ");
                             for (var i = 2; i < words.Length; i++)
                             {
-                                Console.WriteLine("Group chats : ");
+                               //console.WriteLine("Group chats : ");
                                 if (i == words.Length - 1 && words[i].Contains("&"))
                                 {
                                     //getting group chats
                                     char[] delimiterChars_2 = { '&' };
                                     string[] words_2 = words[i].Split(delimiterChars_2, StringSplitOptions.RemoveEmptyEntries);
-                                    for(var j = 0; j < words_2.Length; j++)
+                                    for (var j = 0; j < words_2.Length; j++)
                                     {
-                                        Console.WriteLine(words_2[j]);
+                                       //console.WriteLine(words_2[j]);
                                         group_connected.Add(words_2[j]);
-                                    } 
+                                    }
 
                                 } else
                                 {
                                     people_connected.Add(words[i]);
                                 }
                             }
-                            Console.WriteLine("End Group chats.");
+                           //console.WriteLine("End Group chats.");
 
-                            Console.WriteLine("Generate_friend_list function should be called.");
+                           //console.WriteLine("Generate_friend_list function should be called.");
                             if (client_home != null) client_home.Generate_friend_list(people_connected, group_connected);
                             //Console.WriteLine("End clients connected : ");
                         }
-                    } else
+                    }
+
+                    /* Building Message Event */
+
+                    else if (type_message == "connection")
                     {
-                        if (receiver != _username)
+                        //Event when we tlak with someone, then he disconnects and reconnects
+                        Tchat tchat_tmp = Search_Name_Tchat(sender);
+                        if (tchat_tmp != null)
                         {
-                            //c'est un groupe
-                            Open_tchat(receiver, message, true, sender);
-                        } else
-                        {
-                            Open_tchat(sender, message);
+                            tchat_tmp.Toggle_send_button(true);
+                            tchat_tmp.Update_message_feed(sender + " is back.");
                         }
                     }
-                }
-                
-                /*
-                if (type_message == "connection")     //problem here :(
-                {
-                    string receiver = words[2];
-                    data_string = sender + " : " + message;
-                    Messages_Feed.Text += System.Environment.NewLine + data_string; 
-                } else
-                {
-                    Messages_Feed.Text += System.Environment.NewLine + "Message error.";
-                    MessageBox.Show("Type message : " + type_message + " Sender : " + sender + " Message : " + message);
-                }*/
+                    else if (type_message == "disconnection")
+                    {
+                        //if tchat is opened, we notify it with the action
+                        Tchat tchat_tmp = Search_Name_Tchat(sender);
+                        if (tchat_tmp != null)
+                        {
+                            tchat_tmp.Toggle_send_button(false);
+                            tchat_tmp.Update_message_feed(sender + " has logged out.");
+                        }
+                    }
+                    else if (type_message == "GroupChatMessage")
+                    {
+                        string message = words[3];
+                        Open_tchat(receiver, message, true, sender);
+                    }
+                    else if (type_message == "JoinGroupChatMessage")
+                    {
+                        Tchat tchat_tmp = Search_Name_Tchat(receiver);
+                        if (tchat_tmp != null)
+                        {
+                            Console.WriteLine("\n\nNormalement ça marche pour join samer\n\n");
+                            tchat_tmp.Update_message_feed(sender + " has joined the group.");
+                        } else
+                        {
+                            Console.WriteLine("\n\nPb de tchat pour join\n\n");
+                        }
+                    }
+                    else if (type_message == "LeaveGroupChatMessage")
+                    {
+                        Tchat tchat_tmp = Search_Name_Tchat(receiver);
+                        if (tchat_tmp != null)
+                        {
+                            tchat_tmp.Update_message_feed(sender + " has left the group.");
+                        }
+                    }
+                    else if (type_message == "DeleteGroupChat")
+                    {
+                        //Si la group chat est ouverte, notifier avec un message et bloqué l'envoie de message
+                        Tchat tchat_tmp = Search_Name_Tchat(receiver);
+                        if (tchat_tmp != null)
+                        {
+                            tchat_tmp.Update_message_feed(sender + " has deleted the group. You cannot send message anymore.");
+                            tchat_tmp.Toggle_send_button(false);
+                            //Thread.Sleep(5000);
+                            //tchat_tmp.Exit_tchat();
+                        }
+                    }
+                    else if (type_message == "message")
+                    {
+                        string message = words[3];
+                        Open_tchat(sender, message);
+                    }
 
+                    /* End building Message Event */
+                    
+                }
             }
         }
 
@@ -278,6 +327,15 @@ namespace tuto_client
             if (tchat == null)
             //si le Tchat n'existe pas déjà, on le crée
             {
+                if (group)
+                {
+                    MessageBox.Show("Group");
+                    tchat = new Tchat(this._username, sender, true);
+                } else {
+                    MessageBox.Show("pas Group");
+                    tchat = new Tchat(this._username, sender, false);
+                }
+
                 tchat = new Tchat(this._username, sender, false);
                 tchat.Send_update += Send_Message;
                 tchat.Action_group_update += Action_on_group;
@@ -305,17 +363,21 @@ namespace tuto_client
 
         private Tchat Search_Name_Tchat(string name)
         {
-            //Console.WriteLine("Current name tested : " + name);
-
-            foreach (Tchat item in tchat_Liste)
+            lock (this)
             {
-                //Console.WriteLine("Current item : " + item.FriendName);
-                if (item.FriendName == name)
+                Console.WriteLine("\n\n\nSearch_Name_Tchat CALLED : ");
+                Console.WriteLine("Current name tested : " + name);
+
+                foreach (Tchat item in tchat_Liste)
                 {
-                    return item;
+                    Console.WriteLine("Current tchat : " + item.FriendName);
+                    if (item.FriendName == name)
+                    {
+                        return item;
+                    }
                 }
+                return null;
             }
-            return null;
         }
 
         private bool Search_Delete_Tchat(string name)
@@ -378,6 +440,16 @@ namespace tuto_client
                     return false;
             }
             return false;
+        }
+
+        private void DeleteTchatListe ()
+        {
+            for(int i = 0; i < tchat_Liste.Count; i++)
+            {
+                tchat_Liste.ElementAt(i).Exit_tchat();
+                i--;
+            }
+            tchat_Liste.Clear();
         }
     }
 

@@ -43,7 +43,7 @@ namespace tuto_server
                     //on notifie le client que le server ferme
                 } catch (Exception ex)
                 {
-                    //Console.WriteLine(ex);
+                    Console.WriteLine(ex);
                 }
                 //pour éviter que ça plante si personne ne s'est connecté
                 server.Stop();
@@ -68,7 +68,7 @@ namespace tuto_server
                         
                         listConnectedClients.Add(client_tmp);
                         
-                        Net.ServerSend(client, "client_connected");
+                        Net.ServerSend(this, client, "client_connected");
                         //Console.WriteLine("Connected To Client");
                         if (client.Connected) // If you are connected
                         {
@@ -100,7 +100,7 @@ namespace tuto_server
         public void Message_handling(byte[] data, TcpClient client)
         {
             string data_string = Encoding.Default.GetString(data);
-            Console.WriteLine("\n\nData server reçue : " + data_string);
+            Console.WriteLine("\n\nData reçue sur le serveur : " + data_string);
             char[] delimiterChars = { '@', '#'};
             string[] words = data_string.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries);
 
@@ -114,33 +114,39 @@ namespace tuto_server
             //words[3] --> optionnel : message pour le receveur
             
             string type_message = words[1];
+            string receiver = words[2];
+            
             Client client_tmp = new Client() { Name = words[0], IP = words[2], tcp_client = client };
 
             //System.Console.WriteLine(type_message);
 
             if (type_message == "connection")
             {
+                /*Console.WriteLine("Element 0 : " + listConnectedClients.ElementAt(0).Name);
+                Console.WriteLine("taille liste clients : " + listConnectedClients.Count);
+                if (listConnectedClients.Count == 0) Update_list_client(false);*/
 
                 //connection
                 Change_text("Status : " + client_tmp.Name + " connected.");
                 ModifyListConnectedClients(client_tmp);
 
+                Net.ServerBroadcast(this, listConnectedClients, data_string);
             }
             else if (type_message == "disconnection")
             {
 
                 //disconnection
                 //Console.WriteLine(client_tmp.Name + " is gone :( ");
-                //listConnectedClients.Remove(client);
                 remove_item_listConnectedClients(client_tmp);
                 Change_text("Status : " + client_tmp.Name + " is gone.");
 
                 Update_list_client(true);
 
+                Net.ServerBroadcast(this, listConnectedClients, data_string);
+
             }
             else if (type_message == "NewGroupChat")
             {
-
                 List<String> tmp_list_sub = new List<String>();
                 tmp_list_sub.Add(client_tmp.Name);
 
@@ -148,46 +154,47 @@ namespace tuto_server
                 listGroupChat.Add(group_tmp);
 
                 Update_list_client(true);
-
             }
             else if (type_message == "GroupChatMessage")
             {
-                string receiver = words[2];
                 string message = words[3];
                 Change_text(Name + " to " + receiver + " : " + message);
-
-                for (int i = 0; i < listGroupChat.Count; i++)
+                
+                Group_chat group = Get_Group_Chat(receiver);
+                if (group.topic != null && group.clients_subscribed != null)
                 {
-                    if (receiver == listGroupChat[i].topic)
-                    {
-                        for (int j = 0; j < listGroupChat[i].clients_subscribed.Count; j++)
-                        {
-                            for (int k = 0; k < listConnectedClients.Count; k++)
-                            {
-                                //Console.WriteLine("receiver : " + receiver);
-                                //if (name != client_tmp.Key)
-                                if (listGroupChat[i].clients_subscribed[j] == listConnectedClients[k].Name && listGroupChat[i].clients_subscribed[j] != client_tmp.Name)
-                                {
-                                    //System.Console.WriteLine("forwarded to : " + listConnectedClients[i].Name);
-                                    message = data_string;
-                                    Net.ServerSend(listConnectedClients[k].tcp_client, message);
-                                }
-                            }
-                        }
-                        break;
-                    }
+                    Net.ServerBroadcast_group(this, listConnectedClients, group, data_string, client_tmp.Name);
                 }
+                
             }
             else if (type_message == "JoinGroupChatMessage")  {
                 ModifyListGroup(words[2], client_tmp.Name);
+
+                Group_chat group = Get_Group_Chat(receiver);
+                if (group.topic != null && group.clients_subscribed != null)
+                {
+                    Net.ServerBroadcast_group(this, listConnectedClients, group, data_string, client_tmp.Name);
+                }
             }
             else if (type_message == "LeaveGroupChatMessage")
             {
                 remove_item_list_Group(words[2], false, client_tmp.Name);
+
+                Group_chat group = Get_Group_Chat(receiver);
+                if (group.topic != null && group.clients_subscribed != null)
+                {
+                    Net.ServerBroadcast_group(this, listConnectedClients, group, data_string, client_tmp.Name);
+                }
             }
             else if (type_message == "DeleteGroupChat")
             {
-                Console.WriteLine("Deleting chat");
+                Group_chat group = Get_Group_Chat(receiver);
+                if (group.topic != null && group.clients_subscribed != null)
+                {
+                    Net.ServerBroadcast_group(this, listConnectedClients, group, data_string, client_tmp.Name);
+                }
+
+                //Console.WriteLine("Deleting chat");
                 remove_item_list_Group(words[2], true);
                 Update_list_client(true);
             }
@@ -195,7 +202,6 @@ namespace tuto_server
             {
 
                 //normal message
-                string receiver = words[2];
                 string message = words[3];
                 Change_text(Name + " to " + receiver + " : " + message);
 
@@ -207,7 +213,7 @@ namespace tuto_server
                     {
                         //System.Console.WriteLine("forwarded to : " + listConnectedClients[i].Name);
                         message = data_string;
-                        Net.ServerSend(listConnectedClients[i].tcp_client, message);
+                        Net.ServerSend(this, listConnectedClients[i].tcp_client, message);
                     }
                 }
             }
@@ -241,6 +247,7 @@ namespace tuto_server
         
         public void Update_list_client(bool single_iteration)
         {
+            Console.WriteLine("\n\nUpdating list client on server side.\n\n");
             new Thread(() =>
             {
                 //this.Name = "update_thread";
@@ -253,6 +260,7 @@ namespace tuto_server
                         {
                             Ping pingSender = new Ping();
                             IPAddress address = IPAddress.Parse(listConnectedClients[i].IP);
+                           
                             PingReply reply = pingSender.Send(address);
 
                             if (reply.Status == IPStatus.Success)
@@ -268,20 +276,18 @@ namespace tuto_server
                                 /*//Console.WriteLine(reply.Status);
                                 //Console.WriteLine(client_tmp.Key.Name + " is gone :( ");*/
                                 remove_item_listConnectedClients(listConnectedClients[i]);
-                                display_listConnectedClients();
                                 Change_text("Status : " + listConnectedClients[i].Name + " is gone.");
                                 break;
                             }
                         }
                     }
-                    display_listConnectedClients();
                     ////Console.WriteLine("Fin clients connected : ");
                     //text_clients_connected.Text = data;
                     Net.ServerBroadcast(this, listConnectedClients, listConnectedClients_parser());
 
                     if (!single_iteration) { Thread.Sleep(5000); }
 
-                } while (server_on && !single_iteration);
+                } while (server_on && !single_iteration /*&& listConnectedClients.Count > 0*/);
 
                 if(single_iteration) { Console.WriteLine("Updating List clients on server side, only one iteration is done."); }
 
@@ -328,6 +334,30 @@ namespace tuto_server
             {
                 listGroupChat[index].clients_subscribed.Add(name);
             }
+        }
+
+        public Group_chat Get_Group_Chat(string name)
+        {
+            DisplayListGroup();
+            Console.WriteLine("Get_Group_Chat CALLEEED.");
+            Console.WriteLine("Data tested : " + name);
+
+
+            for (int i = 0; i < listGroupChat.Count; i++)
+            {
+                Console.WriteLine("Current chat tested : " + listGroupChat[i].topic);
+                
+                if (name == listGroupChat[i].topic)
+                {
+                    Console.WriteLine("Get_Group_Chat returned " + listGroupChat[i].topic);
+                    return listGroupChat[i];
+                }
+            }
+
+            Group_chat tmp = new Group_chat() { clients_subscribed = null, topic = null };
+            Console.WriteLine("Get_Group_Chat returned empty object to server, no message sent to client then.");
+
+            return tmp;
         }
 
         public String listConnectedClients_parser()
@@ -394,7 +424,7 @@ namespace tuto_server
 
                 if (delete)
                 {
-                    Console.WriteLine("Delete " + listGroupChat[index].topic);
+                    //Console.WriteLine("Delete " + listGroupChat[index].topic);
                     listGroupChat.RemoveAt(index);
                 }
                 else
@@ -411,14 +441,14 @@ namespace tuto_server
                     }
                     if (flag_2)
                     {
-                        Console.WriteLine("Removing " + name_client + " from " + listGroupChat[index].topic);
+                        //Console.WriteLine("Removing " + name_client + " from " + listGroupChat[index].topic);
                         listGroupChat[index].clients_subscribed.RemoveAt(index_2);
                     }
                 }
             }
         }
 
-        public void display_listConnectedClients ()
+        public void DisplayListConnectedClients ()
         {
             lock(this)
             {
@@ -430,6 +460,23 @@ namespace tuto_server
                     //Console.WriteLine("Client : " + listConnectedClients[i].tcp_client);
                 }
                 //Console.WriteLine("Fin recap clients.\n\n");
+            }
+        }
+
+        public void DisplayListGroup ()
+        {
+            foreach (Group_chat group in listGroupChat)
+            {
+                lock(this)
+                {
+                    Console.WriteLine("Topic : " + group.topic);
+                    Console.WriteLine("Subscribers : ");
+                    foreach (String subscriber in group.clients_subscribed)
+                    {
+                        Console.WriteLine(subscriber);
+                    }
+                    Console.WriteLine("End subscribers for topic " + group.topic);
+                }
             }
         }
     }
