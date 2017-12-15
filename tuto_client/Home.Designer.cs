@@ -30,8 +30,7 @@
         {
             this.client_Label = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.friend_name_Label = new System.Windows.Forms.Label();
-            this.beginining_Message = new System.Windows.Forms.LinkLabel();
+            this.create_group_chat = new System.Windows.Forms.LinkLabel();
             this.status = new System.Windows.Forms.Label();
             this.logout_btn = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
@@ -49,36 +48,25 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.friend_name_Label);
-            this.panel1.Controls.Add(this.beginining_Message);
+            this.panel1.Controls.Add(this.create_group_chat);
             this.panel1.Location = new System.Drawing.Point(39, 178);
             this.panel1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(567, 46);
             this.panel1.TabIndex = 3;
             // 
-            // friend_name_Label
+            // create_group_chat
             // 
-            this.friend_name_Label.AutoSize = true;
-            this.friend_name_Label.Location = new System.Drawing.Point(21, 15);
-            this.friend_name_Label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.friend_name_Label.Name = "friend_name_Label";
-            this.friend_name_Label.Size = new System.Drawing.Size(113, 20);
-            this.friend_name_Label.TabIndex = 3;
-            this.friend_name_Label.Text = "Name Friend 1";
-            // 
-            // beginining_Message
-            // 
-            this.beginining_Message.AutoSize = true;
-            this.beginining_Message.LinkColor = System.Drawing.Color.Black;
-            this.beginining_Message.Location = new System.Drawing.Point(250, 15);
-            this.beginining_Message.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.beginining_Message.Name = "beginining_Message";
-            this.beginining_Message.Size = new System.Drawing.Size(283, 20);
-            this.beginining_Message.TabIndex = 2;
-            this.beginining_Message.TabStop = true;
-            this.beginining_Message.Text = "New Message : \"Hey buddy it\'s been...\"";
-            this.beginining_Message.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Beginining_Message_LinkClicked);
+            this.create_group_chat.AutoSize = true;
+            this.create_group_chat.LinkColor = System.Drawing.Color.Black;
+            this.create_group_chat.Location = new System.Drawing.Point(250, 15);
+            this.create_group_chat.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.create_group_chat.Name = "create_group_chat";
+            this.create_group_chat.Size = new System.Drawing.Size(115, 20);
+            this.create_group_chat.TabIndex = 2;
+            this.create_group_chat.TabStop = true;
+            this.create_group_chat.Text = "Create a group";
+            this.create_group_chat.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.create_group_chat_LinkClicked);
             // 
             // status
             // 
@@ -124,8 +112,7 @@
 
         private System.Windows.Forms.Label client_Label;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.LinkLabel beginining_Message;
-        private System.Windows.Forms.Label friend_name_Label;
+        private System.Windows.Forms.LinkLabel create_group_chat;
         private System.Windows.Forms.Label status;
         private System.Windows.Forms.Button logout_btn;
     }

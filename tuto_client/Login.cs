@@ -35,5 +35,13 @@ namespace tuto_client
         {
             this.Close();
         }
+
+        private void text_usename_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btn_login.PerformClick();
+            }
+        }
     }
 }

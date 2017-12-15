@@ -6,6 +6,12 @@ namespace tuto_client
 {
     public partial class Tchat : Form
     {
+        private bool _group;
+        public bool Group
+        {
+            get { return _group; }
+            set { _group = Group; }
+        }
         private string _name;
         public string username
         {
@@ -20,27 +26,53 @@ namespace tuto_client
             set { _friendName = FriendName; }
         }
 
-        delegate void SetTextCallback(string text);
+        private bool _send_message_enabled;
+        
+        delegate void SetTextCallback_exit();
         delegate void SetTextCallback_safe(string text);
 
         public event EventHandler<Send_btn_event> Send_update;
         public delegate void DelegateRaisingEvent(string message);
         
-        public Tchat(string name, string friend)
+        public event EventHandler<Action_group_event> Action_group_update;
+        public delegate void DelegateAction_group_event(string data, bool delete);
+
+        public Tchat(string name, string friend, bool Group)
         {
             _name = name;
+            _group = Group;
             _friendName = friend;
             InitializeComponent();
             client_Label.Text = "You : " + _name;
             friend_label.Text = _friendName;
+            _send_message_enabled = true;
+            this.ActiveControl = Text_Send;
+            Text_Send.Focus();
+
+            if (!_group)
+            {
+                leave_group_button.Visible = false;
+                delete_group_button.Visible = false;
+            }
         }
 
         private void Btn_Send_Click(object sender, EventArgs e)
         {
             string message = Text_Send.Text;
-            if (message != "")
+            message = message.Replace("\n", String.Empty);
+            message = message.Replace("\r", String.Empty);
+            message = message.Replace("\t", String.Empty);
+            Text_Send.Text = message;
+
+            if (message != "" && _send_message_enabled)
             {
-                message = "@" + this._name + "#message" + "@" + this._friendName + "#" + message;
+                if (_group)
+                {
+                    message = "@" + this._name + "#GroupChatMessage" + "@" + this._friendName + "#" + message;
+                } else
+                {
+                    message = "@" + this._name + "#message" + "@" + this._friendName + "#" + message;
+                }
                 Send_update(this, new Send_btn_event(message));
             }
         }
@@ -56,6 +88,11 @@ namespace tuto_client
             }
         }
         
+        public void Toggle_send_button(bool state)
+        {
+            _send_message_enabled = state;
+        }
+
         public void Update_message_feed (byte[] data)
         {
             //string message = "@" + this._username + "#message" + "@" + receiver + "#" + pe.Message;
@@ -127,10 +164,38 @@ namespace tuto_client
             this.Update_message_feed(text);
         }
 
+        private void leave_group_button_Click(object sender, EventArgs e)
+        {
+            Action_group_update(this, new Action_group_event(_friendName, false));
+            this.Exit_tchat();
+        }
+
         public void Exit_tchat()
         {
-            this.Close();
+            if (this.InvokeRequired)
+            {
+                SetTextCallback_exit d = new SetTextCallback_exit(Exit_tchat);
+                this.Invoke(d, new object[] { });
+            }
+            else
+            {
+                this.Close();
+            }
+        }
+
+        private void delete_group_button_Click(object sender, EventArgs e)
+        {
+            Action_group_update(this, new Action_group_event(_friendName, true));
+            this.Exit_tchat();
         }
         
+        private void Text_Send_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                Btn_Send.PerformClick();
+                Text_Send.Text = "";
+            }
+        }
     }
 }

@@ -11,22 +11,27 @@ namespace tuto_server
 {
     class Net
     {
-        public static void ServerSend (TcpClient client, string msg)
+        public static void ServerSend (Server_side server, TcpClient client, string msg)
         {
             //System.Console.WriteLine("serverSend called");
-            try
+            lock (server)
             {
-                NetworkStream stream = client.GetStream(); //Gets The Stream of The Connection
-                byte[] data; // creates a new byte without mentioning the size of it cuz its a byte used for sending
-                data = Encoding.Default.GetBytes(msg); // put the msg in the byte ( it automaticly uses the size of the msg )
-                int length = data.Length; // Gets the length of the byte data
-                byte[] datalength = new byte[4]; // Creates a new byte with length of 4
-                datalength = BitConverter.GetBytes(length); //put the length in a byte to send it
-                stream.Write(datalength, offset: 0, size: 4); // sends the data's length
-                stream.Write(data, 0, data.Length); //Sends the real data
-            } catch (System.IO.IOException ex)
-            {
-                Console.WriteLine(ex);
+                try
+                {
+
+                    NetworkStream stream = client.GetStream(); //Gets The Stream of The Connection
+                    byte[] data; // creates a new byte without mentioning the size of it cuz its a byte used for sending
+                    data = Encoding.Default.GetBytes(msg); // put the msg in the byte ( it automaticly uses the size of the msg )
+                    int length = data.Length; // Gets the length of the byte data
+                    byte[] datalength = new byte[4]; // Creates a new byte with length of 4
+                    datalength = BitConverter.GetBytes(length); //put the length in a byte to send it
+                    stream.Write(datalength, offset: 0, size: 4); // sends the data's length
+                    stream.Write(data, 0, data.Length); //Sends the real data
+                }
+                catch (System.IO.IOException ex)
+                {
+                    Console.WriteLine(ex);
+                }
             }
         }
         
@@ -89,6 +94,27 @@ namespace tuto_server
                 }
             }
         }
-        
+
+        public static void ServerBroadcast_group(Server_side server, List<Client> listConnectedClients, Group_chat Group, string message, string sender)
+        {
+            Console.WriteLine("Net ServerBroadcast_group calleeeed :");
+
+            lock (server)
+            {
+                for (int j = 0; j < Group.clients_subscribed.Count; j++)
+                {
+                    for (int k = 0; k < listConnectedClients.Count; k++)
+                    {
+                        if (Group.clients_subscribed[j] == listConnectedClients[k].Name && Group.clients_subscribed[j] != sender)
+                        {
+                            Console.WriteLine("Server sending : " + message + " to " + listConnectedClients[k].Name);
+                            Net.ServerSend(server, listConnectedClients[k].tcp_client, message);
+                        }
+                    }
+                }
+            }
+        }
+
+
     }
 }

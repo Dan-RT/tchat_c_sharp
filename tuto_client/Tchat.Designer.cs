@@ -33,6 +33,8 @@
             this.Messages_Feed = new System.Windows.Forms.RichTextBox();
             this.Text_Send = new System.Windows.Forms.TextBox();
             this.Btn_Send = new System.Windows.Forms.Button();
+            this.leave_group_button = new System.Windows.Forms.Button();
+            this.delete_group_button = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // friend_label
@@ -57,9 +59,11 @@
             // 
             // Messages_Feed
             // 
+            this.Messages_Feed.BackColor = System.Drawing.Color.White;
             this.Messages_Feed.Location = new System.Drawing.Point(164, 32);
             this.Messages_Feed.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Messages_Feed.Name = "Messages_Feed";
+            this.Messages_Feed.ReadOnly = true;
             this.Messages_Feed.Size = new System.Drawing.Size(540, 473);
             this.Messages_Feed.TabIndex = 2;
             this.Messages_Feed.Text = "";
@@ -72,6 +76,7 @@
             this.Text_Send.Name = "Text_Send";
             this.Text_Send.Size = new System.Drawing.Size(412, 90);
             this.Text_Send.TabIndex = 3;
+            this.Text_Send.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Text_Send_KeyUp);
             // 
             // Btn_Send
             // 
@@ -84,11 +89,33 @@
             this.Btn_Send.UseVisualStyleBackColor = true;
             this.Btn_Send.Click += new System.EventHandler(this.Btn_Send_Click);
             // 
+            // leave_group_button
+            // 
+            this.leave_group_button.Location = new System.Drawing.Point(37, 209);
+            this.leave_group_button.Name = "leave_group_button";
+            this.leave_group_button.Size = new System.Drawing.Size(97, 62);
+            this.leave_group_button.TabIndex = 5;
+            this.leave_group_button.Text = "Leave Group";
+            this.leave_group_button.UseVisualStyleBackColor = true;
+            this.leave_group_button.Click += new System.EventHandler(this.leave_group_button_Click);
+            // 
+            // delete_group_button
+            // 
+            this.delete_group_button.Location = new System.Drawing.Point(37, 122);
+            this.delete_group_button.Name = "delete_group_button";
+            this.delete_group_button.Size = new System.Drawing.Size(97, 62);
+            this.delete_group_button.TabIndex = 6;
+            this.delete_group_button.Text = "Delete Group";
+            this.delete_group_button.UseVisualStyleBackColor = true;
+            this.delete_group_button.Click += new System.EventHandler(this.delete_group_button_Click);
+            // 
             // Tchat
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(738, 660);
+            this.Controls.Add(this.delete_group_button);
+            this.Controls.Add(this.leave_group_button);
             this.Controls.Add(this.Btn_Send);
             this.Controls.Add(this.Text_Send);
             this.Controls.Add(this.Messages_Feed);
@@ -109,5 +136,7 @@
         private System.Windows.Forms.RichTextBox Messages_Feed;
         private System.Windows.Forms.TextBox Text_Send;
         private System.Windows.Forms.Button Btn_Send;
+        private System.Windows.Forms.Button leave_group_button;
+        private System.Windows.Forms.Button delete_group_button;
     }
 }

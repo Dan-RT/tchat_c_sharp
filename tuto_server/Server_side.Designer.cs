@@ -32,8 +32,6 @@
             this.txtLog = new System.Windows.Forms.RichTextBox();
             this.txtSend = new System.Windows.Forms.TextBox();
             this.btn_listen = new System.Windows.Forms.Button();
-            this.text_clients_connected = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnSend
@@ -49,9 +47,11 @@
             // 
             // txtLog
             // 
+            this.txtLog.BackColor = System.Drawing.Color.White;
             this.txtLog.Location = new System.Drawing.Point(80, 132);
             this.txtLog.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtLog.Name = "txtLog";
+            this.txtLog.ReadOnly = true;
             this.txtLog.Size = new System.Drawing.Size(546, 244);
             this.txtLog.TabIndex = 2;
             this.txtLog.Text = "";
@@ -63,6 +63,7 @@
             this.txtSend.Name = "txtSend";
             this.txtSend.Size = new System.Drawing.Size(544, 26);
             this.txtSend.TabIndex = 3;
+            this.txtSend.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtSend_KeyUp);
             // 
             // btn_listen
             // 
@@ -75,31 +76,11 @@
             this.btn_listen.UseVisualStyleBackColor = true;
             this.btn_listen.Click += new System.EventHandler(this.Btn_listen_Click);
             // 
-            // text_clients_connected
-            // 
-            this.text_clients_connected.AutoSize = true;
-            this.text_clients_connected.Location = new System.Drawing.Point(755, 135);
-            this.text_clients_connected.Name = "text_clients_connected";
-            this.text_clients_connected.Size = new System.Drawing.Size(70, 20);
-            this.text_clients_connected.TabIndex = 5;
-            this.text_clients_connected.Text = "No client";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(755, 60);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(136, 20);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Clients connected";
-            // 
             // Server_side
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1022, 614);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.text_clients_connected);
+            this.ClientSize = new System.Drawing.Size(710, 614);
             this.Controls.Add(this.btn_listen);
             this.Controls.Add(this.txtSend);
             this.Controls.Add(this.txtLog);
@@ -117,7 +98,5 @@
         private System.Windows.Forms.RichTextBox txtLog;
         private System.Windows.Forms.TextBox txtSend;
         private System.Windows.Forms.Button btn_listen;
-        private System.Windows.Forms.Label text_clients_connected;
-        private System.Windows.Forms.Label label2;
     }
 }
