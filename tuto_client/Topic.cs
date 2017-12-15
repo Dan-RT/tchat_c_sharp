@@ -35,7 +35,15 @@ namespace tuto_client
             {
                 MessageBox.Show("Please choose a topic.");
             }
-        } 
+        }
+
+        private void topic_box_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                create_chat.PerformClick();
+            }
+        }
     }
 
     public class New_group_chat_event : EventArgs

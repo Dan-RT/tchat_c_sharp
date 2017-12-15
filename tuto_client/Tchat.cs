@@ -46,6 +46,9 @@ namespace tuto_client
             client_Label.Text = "You : " + _name;
             friend_label.Text = _friendName;
             _send_message_enabled = true;
+            this.ActiveControl = Text_Send;
+            Text_Send.Focus();
+
             if (!_group)
             {
                 leave_group_button.Visible = false;
@@ -56,6 +59,11 @@ namespace tuto_client
         private void Btn_Send_Click(object sender, EventArgs e)
         {
             string message = Text_Send.Text;
+            message = message.Replace("\n", String.Empty);
+            message = message.Replace("\r", String.Empty);
+            message = message.Replace("\t", String.Empty);
+            Text_Send.Text = message;
+
             if (message != "" && _send_message_enabled)
             {
                 if (_group)
@@ -179,6 +187,15 @@ namespace tuto_client
         {
             Action_group_update(this, new Action_group_event(_friendName, true));
             this.Exit_tchat();
+        }
+        
+        private void Text_Send_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                Btn_Send.PerformClick();
+                Text_Send.Text = "";
+            }
         }
     }
 }

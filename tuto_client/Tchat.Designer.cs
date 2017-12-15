@@ -59,9 +59,11 @@
             // 
             // Messages_Feed
             // 
+            this.Messages_Feed.BackColor = System.Drawing.Color.White;
             this.Messages_Feed.Location = new System.Drawing.Point(164, 32);
             this.Messages_Feed.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Messages_Feed.Name = "Messages_Feed";
+            this.Messages_Feed.ReadOnly = true;
             this.Messages_Feed.Size = new System.Drawing.Size(540, 473);
             this.Messages_Feed.TabIndex = 2;
             this.Messages_Feed.Text = "";
@@ -74,6 +76,7 @@
             this.Text_Send.Name = "Text_Send";
             this.Text_Send.Size = new System.Drawing.Size(412, 90);
             this.Text_Send.TabIndex = 3;
+            this.Text_Send.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Text_Send_KeyUp);
             // 
             // Btn_Send
             // 

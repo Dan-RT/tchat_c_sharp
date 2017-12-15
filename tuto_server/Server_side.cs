@@ -87,10 +87,25 @@ namespace tuto_server
 
         private void BtnSend_Click_1(object sender, EventArgs e)
         {
+            string message = "";
+
             try
             {
-                Net.ServerBroadcast(this, listConnectedClients, txtSend.Text);
-                txtSend.Clear();
+                message = txtSend.Text;
+                message = message.Replace("\n", String.Empty);
+                message = message.Replace("\r", String.Empty);
+                message = message.Replace("\t", String.Empty);
+                txtSend.Text = message;
+
+                if (message != "")
+                {
+                    message = "@Server" + "#ServerMessage" + "@All" + "#" + message;
+                    Net.ServerBroadcast(this, listConnectedClients, message);
+                    Change_text("Server to All : " + txtSend.Text);
+                    txtSend.Clear();
+                }
+                
+
             } catch
             {
                 MessageBox.Show("Cannot receive data, no client connected.");
@@ -129,6 +144,8 @@ namespace tuto_server
                 //connection
                 Change_text("Status : " + client_tmp.Name + " connected.");
                 ModifyListConnectedClients(client_tmp);
+
+                Update_list_client(true);
 
                 Net.ServerBroadcast(this, listConnectedClients, data_string);
             }
@@ -477,6 +494,15 @@ namespace tuto_server
                     }
                     Console.WriteLine("End subscribers for topic " + group.topic);
                 }
+            }
+        }
+
+        private void txtSend_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnSend.PerformClick();
+                txtSend.Text = "";
             }
         }
     }

@@ -47,9 +47,11 @@
             // 
             // txtLog
             // 
+            this.txtLog.BackColor = System.Drawing.Color.White;
             this.txtLog.Location = new System.Drawing.Point(80, 132);
             this.txtLog.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtLog.Name = "txtLog";
+            this.txtLog.ReadOnly = true;
             this.txtLog.Size = new System.Drawing.Size(546, 244);
             this.txtLog.TabIndex = 2;
             this.txtLog.Text = "";
@@ -61,6 +63,7 @@
             this.txtSend.Name = "txtSend";
             this.txtSend.Size = new System.Drawing.Size(544, 26);
             this.txtSend.TabIndex = 3;
+            this.txtSend.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtSend_KeyUp);
             // 
             // btn_listen
             // 

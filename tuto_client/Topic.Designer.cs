@@ -49,6 +49,7 @@
             this.topic_box.Name = "topic_box";
             this.topic_box.Size = new System.Drawing.Size(201, 26);
             this.topic_box.TabIndex = 1;
+            this.topic_box.KeyUp += new System.Windows.Forms.KeyEventHandler(this.topic_box_KeyUp);
             // 
             // Cancel_button
             // 

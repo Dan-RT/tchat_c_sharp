@@ -104,7 +104,7 @@ namespace tuto_client
                             label_tmp.Top = 186 + ((labelHeight + labelMargin) * label_list.Count) + labelMargin;
                         }
                         
-                        label_tmp.Left = 252;
+                        label_tmp.Left = 222;
                         label_tmp.Width = labelWidth;
 
                         label_tmp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Label_LinkClicked);
@@ -136,7 +136,7 @@ namespace tuto_client
 
 
                     label_tmp.Name = "Group_" + label_tmp.Top;
-                    label_tmp.Left = 252;
+                    label_tmp.Left = 222;
                     label_tmp.Width = labelWidth;
 
                     label_tmp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Label_LinkClicked);

@@ -184,6 +184,10 @@ namespace tuto_client
                             //Console.WriteLine("End clients connected : ");
                         }
                     }
+                    else if (type_message == "ServerMessage")
+                    {
+                        MessageBox.Show("Message from the server : " + words[3]);
+                    }
 
                     /* Building Message Event */
 
@@ -329,16 +333,13 @@ namespace tuto_client
             {
                 if (group)
                 {
-                    MessageBox.Show("Group");
                     tchat = new Tchat(this._username, sender, true);
+                    tchat.Action_group_update += Action_on_group;
                 } else {
-                    MessageBox.Show("pas Group");
                     tchat = new Tchat(this._username, sender, false);
                 }
-
-                tchat = new Tchat(this._username, sender, false);
+                
                 tchat.Send_update += Send_Message;
-                tchat.Action_group_update += Action_on_group;
                 tchat_Liste.Add(tchat);
                 
                 new Thread(() =>
