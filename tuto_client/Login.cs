@@ -22,12 +22,19 @@ namespace tuto_client
         
         private void Btn_login_Click(object sender, EventArgs e)
         {
-            if (text_usename.Text != "")
+            if (text_usename.Text != "" && text_password.Text != "")
             {
-                Log_update(this, new Log_btn_event(true, text_usename.Text));
+                if (text_password.Text == "password")
+                {
+                    Log_update(this, new Log_btn_event(true, text_usename.Text));
+                } else
+                {
+                    MessageBox.Show("Incorrect password, please try again.");
+                    text_password.Text = "";
+                }
             } else
             {
-                MessageBox.Show("Please enter a username.");
+                MessageBox.Show("Please fill all the required fields.");
             }
         }
 
@@ -37,6 +44,14 @@ namespace tuto_client
         }
 
         private void text_usename_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Tab)
+            {
+                text_password.Focus();
+            }
+        }
+
+        private void text_password_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {

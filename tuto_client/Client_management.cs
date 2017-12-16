@@ -424,7 +424,7 @@ namespace tuto_client
         {
             // Configure the message box to be displayed
             string messageBoxText = question;
-            string caption = "Word Processor";
+            string caption = "Join Group";
             MessageBoxButtons button = MessageBoxButtons.YesNoCancel;
             
             // Display message box
